@@ -1,0 +1,173 @@
+www.netcraft.com
+
+a Patchy Server = apache
+FSF:GUN,GPL
+ASF:Apache Software Foundation  www.apache.org
+   web:httpd
+       Tomcat  jsp的应用程序服务器
+       Hadoop  提供高性能运算，并行处理环境，实现将数千台电脑组合起来，完成同一功能
+apache: http://httpd.apache.org
+
+httpd:
+web server,open source
+version:2.0稳定，2.2主流，2.4最新
+特性： 
+  事先创建进程：
+  按需维持适当的进程
+  模块化设计，核心只具备基本功能，核心比较小，各种功能都通过模块添加，用到时候在启用（包括php）
+    支持运行配置，支持单独编译模块
+  支持多种方式的虚拟主机配置
+    socket: ip:port
+        虚拟主机
+           基于ip
+           基于端口
+           基于域名
+  支持https协议（mod_ssl）
+  支持用户认证
+  支持基于ip或主机名的ACL
+  支持每目录的访问控制
+  支持URL重写
+
+nginx:一般用来做反向代理
+
+安装
+ rpm
+ 源码编译  企业最好编译安装
+
+httpd 受控制与SELINUX(事先让其出于关闭状态)
+getenforce 查看当前selinux状态
+setenforce 0 设置禁用
+永久生效，修改
+vim /etc/sysconfig/selinux
+或者
+vim /selinux/config
+
+httpd
+ /usr/sbin/httpd(MPM:prefork)
+   httpd: root,root 启动进程，回收进程 （master process主导进程)
+   httpd: apache,apache 相应用户请求的进程 工作进程(worker process)
+ /etc/rc.d/httpd 服务脚本 启动，关闭等
+ port：（80/tcp）,(ssl:443/tcp)
+ /etc/httpd 工作的根目录，进程运行的根目录，相当于程序安装目录
+ /etc/httpd/conf 配置文件
+    主配置文件 httpd.conf
+    /etc/httpd/conf.d/*.conf 都是配置文件，主配置文件使用include包含这些文件
+ /etc/httpd/modules 模块目录链接
+ /etc/httpd/logs 日志目录链接 --> /var/log/httpd
+    日志两类：
+       访问日志access_log
+       错误日志err_log
+  /var/www 访问路径
+     html 静态页面目录
+    cgi-bin 动态页面的目录 
+       cgi:让web和额外的程序通信的机制common gateway interface
+          client --> httpd(index.cgi) --> spawn a process (index.cgi) 
+           perl,python,java,(servlet,JSP),php
+       fastcgi:
+
+httpd
+ 安装 yum install httpd
+ 安装帮助手册
+   yum install httpd-manual
+      文件在/etc/httpd/conf.d/manual.conf
+        网址后面/manual即可
+         手册中有快速参数查询
+ 修改配置 /etc/httpd/conf/httpd.conf
+  2.0 2.2 2.4 配置文件变化了 
+
+LoadRunner 接近真实的压力测试工具
+
+MPM：multi path modules 多道处理模块，定义多用户请求时如何响应
+  mpm_winnt（windows专用）
+  prefork(一个请求用一个进程响应,默认使用)
+  worker（一个请求用一个线程响应，启动多个进程，每个进程生成多个线程，如果需要写资源的话需要加锁避免竞争，linux不是原生支持线程，所以效果不好，默认使用prefork）
+  event （一个进程处理多个请求）
+
+httpd -l 当前httpd所支持的模块
+rpm -ql httpd|grep bin  查看安装的httpd有没有httpd.work或httpd.event 决定是否能启用其他工作模块
+
+/etc/sysconfig/httpd    httpd启动默认脚本
+容器方法
+<IfModule dir_module>              
+dddd                   
+<IfModule>
+URL路径和本地文件系统路径不是一码事，URL是相对于DocumentRoot的路径而言的
+Order 用于定义基于主机的访问，ip 网络地址或主机定义访问控制
+Order allow,deny
+  allow from
+  deny from
+192.168.0.0/24
+默认deny
+定义先deny后allow
+http -t 测试语法
+Alias 支持路径别名别名
+
+定义网站文档目录
+访问选项
+基于主机的访问控制
+基于用户或组的访问控制
+用户个人站点
+错误日志
+日志格式
+访问日志 pv uv
+路径别名
+
+apacache虚拟主机:
+apache:服务器 HOST 物理主机
+
+虚拟主机
+apache服务
+  服务于多个不同的站点
+apache
+  中心主机
+  虚拟主机
+     基于ip
+        ip1:80
+        ip2:80
+     基于端口
+        ip1:80
+        ip1:8080
+     基于域名
+        ip:80
+          主机名不同
+            www.1.com
+            www.b.com
+定义虚拟主机
+apache 2.2
+NameVirtualHost
+apache 2.4 自主启用
+
+ServerName
+ServerAlias
+DocumentRoot /www/a.org/
+<Directory "/www/a.org">
+  option
+  AllowOverride
+</Directory>
+Alias
+Errorlog
+Customlog
+
+<Location "/images">
+</Location>
+ScriptAlias
+
+CGI Common Gatway Interface
+
+得先取消中心主机，注释中心主机的DocumentRoot即可
+虚拟主机定义
+<VirtualHost Host>
+</VirtualHost>
+基于ip,HOST写法
+HOST
+  ip1:80
+  ip2:80
+基于端口
+HOST
+  ip:80
+  ip:8080
+基于域名
+  *：80
+serverName不同
+
+serverstatus

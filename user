@@ -1,0 +1,241 @@
+权限
+用户
+用户，容器关联权限 
+用户组 方便的指派权限
+
+文件
+r 可读 可以使用类似cat命令查看文件内容
+w 可写 可以编辑或删除文件
+x 可执行 可以命令提示符下当做命令提交给内核运行
+
+目录
+r 可以对目录执行ls列出内部所有文件
+w 可以在此目录创建文件
+x 可以使用cd切换进目录，也可以使用ls -l 查看内部文件详细信息
+目录一般有x，文件不能随意有x
+
+r w x - 4 2 1 0
+
+用户UID 用户组GID
+/etc/passwd
+/etc/group
+/etc/shadow
+/etc/gshadow
+用户类别
+管理员 0
+普通用户
+ 系统用户 0-499
+ 一般用户 500-60000
+用户组
+私有组
+基本组
+附件组
+
+/etc/passwd  7个字段
+用户名:密码占位符:UID:基本组GID:注释:家目录:默认的shell
+/etc/shadow
+登录名:加密的密码:最近一次密码修改时间距离19701月1日的时间:最短密码使用期限:密码最长使用期限:密码过期警告时间:过期后禁用前宽限期:自1970年1月1日后多少天密码禁用:保留字段，没有意义
+/etc/group
+组名:密码占位符:GID:以此组为附加组的用户列表
+which
+查看命令在哪个目录下
+用户管理：
+useradd userdel usermod passwd chsh chfn finger id chage
+组管理
+groupadd groupdel groupmod gpasswd
+权限管理
+chown chgrp chmod umask
+
+useradd [options] LOGINNAME
+ /etc/default 默认建立用户的属性配置
+ -u UID
+ -g GID(基本组)
+ -G GID,....(附加组)
+ -c "注释"
+ -d /path/to/directory
+ -s /sbin/nologin
+ -M 不创建家目录
+ -m -k 创建家目录   
+ -r 添加一个系统用户
+ -r -s
+/etc/skel
+/etc/login.defs
+/etc/shell
+
+userdel [option] LOGINNAME
+默认不删除用户家目录
+ -r 删除用户同时删除家目录
+
+id 查看用户账号属性信息
+ id [options] LOGINNAME
+ -u 显示uid
+ -g 显示GID
+ -G 所有组的组id
+ -n 变id号为名字 -un  -gn -Gn
+finger 检索用户信息
+ finger LOGINNAME
+
+修改用户账号属性
+usermod [options] LOGINNAME
+ -u uid
+ -g gid或者组名称 修改基本组
+ -G 修改用户附加组 （如果用户之前有附加组，新设定会覆盖旧的附加组）
+ -G -a 在原有附加组基础上额外添加新的附加组
+ -c 使用注释信息
+ -d 修改家目录，为用户制定新的家目录，但不复制文件
+ -d -m 修改家目录并复制旧目录下文件到新目录中
+ -s 修改shell
+ -l 修改登录名
+ -L 锁定用户，用户不能登录
+ -U 解锁用户
+chsh:修改用户shell 
+chsh LOGINNAME
+chfn:修改用户注释信息
+chfn LOGINNAME
+
+passwd 密码管理
+passwd [LOGINNAME]
+ --stdin
+ -l 锁定用户账号
+ -u 解锁用户账号
+ -d 删除用户密码
+pwck 检查用户账号完整性
+
+组管理
+创建组 groupadd
+ -g 指定gid
+ -r 添加系统组
+groupmod
+ -g gid 修改gid
+ -n GROUPNAME 修改组名
+groupdel 
+gpasswd 为组设定密码
+newgrp GROUPNAME <--> exit
+
+chage
+ -d 最近一次的修改时间
+ -E 过期时间
+ -I 非活动时间
+ -m 最短使用期限
+ -M 最长使用期限
+ -W 警告时间
+
+权限管理
+chown 改变属主属组
+chown USERNAME file,...
+ -R 修改目录及目录内文件
+ --reference=/path/somefile file,...以某文件为模板设定文件权限
+ chown USERNAME:GRPNAME file
+ chown USERNAME.GRENAME file
+ chown :GRPNAME file
+chgrp
+ -R
+ --reference=/path/somefile file,...
+
+chmod
+chmod MODE fiel,...
+ -R
+ --reference=/path/to/somefile file,...
+u g o a
+chmod 用户类别=MODE file,...
+chmod 用户类别+[-] MODE file,...
+
+umask
+文件
+666-umask
+目录
+777-umask
+
+登录式shell
+ su - 完全切换
+ su -l
+
+非登录
+ su USERNAME 半切换
+图形终端
+自动执行的脚本
+
+bash 配置文件
+全局配置
+/etc/profile /etc/profile.d/*.sh /etc/bashrc
+个人配置 
+~/.bash_profile ~/.bashrc
+
+profile类文件
+ 设定环境变量
+ 运行命令或脚本
+bashrc类文件
+ 设定本地变量
+ 定义命令别名
+
+登录式shell如何读取配置文件
+/etc/profile -->/etc/profile.d/*.sh --> ~/.bash_profile --> ~/.bashrc --> /etc/bashrc
+非登录式shell
+~/.bashrc --> /etc/bashrc --> /etc/profile.d/*.sh
+
+特殊权限
+passwd:s
+SUID 运行某程序时，相应进程的属主是程序文件自身的属主，而不是启动者
+   chmod u+s FILENAME
+   chmod u-s
+   如果file本身原来就有执行权限，则SUID显示为s，负责显示为S
+
+SGID 运行某程序时，相应进程的属组是程序文件自身的属组，而不是启动者的所属的基本组
+    chmod g+s FILENAME
+    chmod g-s
+     应用场景 develop team hadoop.hbase,hive
+           /tmp/project/
+Sticky 在一个公共目录，每个人都可以创建删除自己的文件，但不能删除别人的文件
+   如果file本身原来就有执行权限，则显示为t负责显示为T
+     chmod o+t DIRNAME
+     chmod o-t DIRNAME
+     
+
+文件系统访问控列表：
+FACL：Filesystem Access Control List
+利用文件扩展属性保存额外的访问控制权限
+getfacl
+setfacl
+  -m 设定
+    u:UID:perm
+    g:GID:perm
+    d:u:UID:perm
+    d:g:GID:perm
+ setfacl -m u:chao:rwx FILENAME
+  -x 取消
+ setfacl -x g:mygroup FILENAME
+Owner-->facl,user-->Group-->facl,group-->ohter
+
+whereis
+w
+who
+whoami
+last 登录记录 显示/var/log/wtmp文件内容 用户登录历史，及系统重启历史
+  last -n # 显示最近的几次登录信息
+lastb 显示 /var/log/btmp 文件，显示用户错误登录尝试
+   lastb -n # 显示最近的登录信息
+lastlog 显示每一个用户上次的成功登录信息
+  lastlog -u username: 显示特定用户最近的登录信息
+basename
+  取得路径下的文件名，路径的基名
+  basename $0 执行脚本时的脚本名称
+mail
+ echo "ddd" | mail -s 指定邮件主题 收件人
+
+hostname
+
+生成随机数
+RANDOM 0-32768
+随机数生成器 熵池
+/dev/random 熵池空了会阻塞用户进程，等待生成 安全，不好用
+/dev/urandom 熵池空了不会阻塞用户进程，空了就是软件生成，好用不是绝对安全
+
+
+终端类型
+console 控制台
+pty 物理终端
+tty# 虚拟终端
+ttys# 串行终端
+pts/# 伪终端
+
+

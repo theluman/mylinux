@@ -1,0 +1,129 @@
+#	$OpenBSD: sshd_config,v 1.93 2014/01/10 05:59:19 djm Exp $
+
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more information.
+# This sshd was compiled with PATH=/usr/local/bin:/usr/bin
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented.  Uncommented options override the
+# default value.
+# If you want to change the port on a SELinux system, you have to tell
+# SELinux about this change.
+# semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
+#
+###'#'加空格的是纯注释，#加命令的是可以启用的选项
+#Port 22                                                 #端口，默认就是22，可以启用更换其他端口
+#AddressFamily any                                       #设定在哪一类地址上提供ssh服务 ipv4 ipv6 any 默认是any
+#ListenAddress 0.0.0.0                                   #设定在哪一个ip地址上提供服务
+#ListenAddress ::                                        #none
+# The default requires explicit activation of protocol 1
+#Protocol 2                                              #ssh协议版本，应该是用2，最好不要使用1
+# HostKey for protocol version 1
+#HostKey /etc/ssh/ssh_host_key
+# HostKeys for protocol version 2
+HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+# Lifetime and size of ephemeral version 1 server key
+#KeyRegenerationInterval 1h                              #秘钥重新生成的时间间隔
+#ServerKeyBits 1024                                      #秘钥长度 1024bits
+# Ciphers and keying
+#RekeyLimit default none
+# Logging
+# obsoletes QuietMode and FascistLogging
+#SyslogFacility AUTH
+SyslogFacility AUTHPRIV                                  #日志facility
+#LogLevel INFO
+# Authentication:
+#LoginGraceTime 2m                                       #登录的宽限期，最多等待时间
+#PermitRootLogin yes                                     #是否管理员直接登录
+#StrictModes yes                                         #是否使用严格限定模式
+#MaxAuthTries 6                                          #用户密码最多尝试次数
+#MaxSessions 10                                          #
+#RSAAuthentication yes                                   #是否支持RSA机制的秘钥认证
+#PubkeyAuthentication yes                                #是否支持秘钥认证
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile	.ssh/authorized_keys             #秘钥文件（公钥）放到这个文件内
+#AuthorizedPrincipalsFile none
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#RhostsRSAAuthentication no                             #是否允许基于主机的认证
+# similar for protocol version 2
+#HostbasedAuthentication no
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# RhostsRSAAuthentication and HostbasedAuthentication
+#IgnoreUserKnownHosts no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+#PermitEmptyPasswords no
+PasswordAuthentication yes                              #是否启用基于口令的认证，账号密码
+# Change to no to disable s/key passwords
+#ChallengeResponseAuthentication yes
+ChallengeResponseAuthentication no                      #是否启用挑战是握手协议，不安全
+# Kerberos options
+#KerberosAuthentication no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+#KerberosGetAFSToken no
+#KerberosUseKuserok yes
+# GSSAPI options
+GSSAPIAuthentication yes                                #是否启用基于gssapi的认证
+GSSAPICleanupCredentials no
+#GSSAPIStrictAcceptorCheck yes
+#GSSAPIKeyExchange no
+#GSSAPIEnablek5users no
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+# WARNING: 'UsePAM no' is not supported in Red Hat Enterprise Linux and may cause several
+# problems.
+UsePAM yes                                                #是否使用pam，应该使用
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+X11Forwarding yes                                          #是否转化x11请求
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+#PrintMotd yes                                             #是否显示/etc/Motd的内容
+#PrintLastLog yes                                          #是否显示上次登录信息 应该禁止，不安全
+#TCPKeepAlive yes
+#UseLogin no
+UsePrivilegeSeparation sandbox		# Default for new installations.
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#ShowPatchLevel no
+#UseDNS yes
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+# no default banner path
+#Banner none                                     #欢迎标语,Banner /some/path,显示不安全
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+# override default of no subsystems
+Subsystem	sftp	/usr/libexec/openssh/sftp-server  #子系统基于ssh的ftp服务，将明文传输加密
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	PermitTTY no
+#	ForceCommand cvs server

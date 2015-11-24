@@ -1,0 +1,253 @@
+c语言： 源代码-->(编译)二进制格式
+脚本：解释器（二进制程序）
+
+源代码-->编译-->链接-->运行
+程序
+  库
+    静态
+    动态
+
+    静态链接
+    动态链接 ：利用共享库
+配置文件
+dir=/path/to/somewhere
+
+程序组成部分：
+  二进制程序 配置文件 库  帮助文件
+
+/usr/shar/man
+
+/etc /bin /sbin /lib
+以上系统启动就需要用到的，绝对不能单独分区，不能挂载额外的分区，必须在根上
+
+/usr/bin /usr/sbin /usr/lib
+操作系统核心功能，可以单独分区
+
+/usr/local/bin /usr/local/sbin /usr/local/lib /usr/local/etc /usr/local/man
+第三方软件，独立王国 建议独立分区
+
+/opt 老软件安装目录
+
+/proc
+/sys      
+这两个既不能单独分区，也不能有任何文件
+
+/dev 设备文件，不能单独分区
+/root 不能单独分区
+/var 建议单独分区
+/boot 内核 initrd(initramfs) 
+  内核
+
+
+启动过程 POST(加电自检)-->BIOS(HD)-->MBR(bootloader)-->内核
+
+软件包管理器的核心功能
+ 1.制作软件包：                    打包成一个文件：二进制文件 库文件 配置文件 帮助文件
+ 2.安装、卸载、升级、查询、校验     生成数据库：追踪所安装的每一个文件
+Redhat suse: RPM 
+debian: dpt
+
+依赖关系
+ X-->Y-->Z
+后端工具 rpm dpt
+前段工具yum（yellowdog),apt-get
+
+rpm:人家编译好的，配置好的
+  rpm:管理软件包
+    数据库 /var/lib/rpm
+  rpmbuild:制作软件包
+安装 查询 卸载 升级 校验 数据库
+
+包 组成部分
+  主包
+    bind-9.7.1-1.i386.el5.rpm
+  子包
+    bind-libs-9.7.1-1.i386.el5.rpm
+包名格式：
+  name-version-release.arch.rpm
+  bind-major.minor.release-release.arch.rpm
+主版本号 重大改进
+次版本号 某个子功能发生重大改变
+发行号 修正了部分bug,调整了一点功能
+
+rpm包
+二进制格式
+  rpm包作者下载源程序，编译配置围城后，制作成rpm包
+  bind-9.7.1-1.el5.arch.rpm
+                   noarch 与平台无关
+源码格式
+
+uname -r 
+uname -a 查看平台版本
+安装
+rpm -i /PATH/TO/PACKAGE_FILENAME
+    -h 以#显示进度，每个#表示%2
+    -v 显示详细过程
+    -vv 更详细的过程
+rpm -ivh /PATH/TO/PACKAGE_FILENAME
+    --nodeps 或略依赖关系
+    --replacepkgs 重新安装，替换原有安装
+    --force 强行安装，可以实现重装或降级
+查询
+ rpm -q PACKAGE_NAME 查询指定的包
+rpm -qa 查询所有已经安装的包   rpm -qa|grep vim*
+rpm -qi PACKAGE_NAME  查询指定软件包的说明信息
+rpm -ql PACKAGE_NAME  查询指定包安装后生成的文件的列表
+rpm -qc PACKAGE_NAME  查询指定的包安装的配置文件
+rpm -qd PACKAGE_NAME  查询指定的包安装的帮助文件
+rpm -qf /PATH/to/SOMEFILE 查询指定的文件是由哪个rpm包安装生成的
+
+rpm -q --scripts PACKAGE_NAME 查询指定的包中包含的脚本
+    4类脚本
+如果某rpm包尚未安装，我们需要查询起说明信息，安装以后会生成哪些文件
+rpm -qpi /path/to/PACKAGE_NAME
+       a
+       l
+       c
+       d
+       
+升级
+rpm -U
+rpm -Uvh /path/to/new_package_file 如果装有老版本的则升级，否则，则安装
+rpm -F
+rpm -Fvh /path/to/new_package_file 如果装有老版本的，则升级，否则，退出
+    --oldpackage  /path/to/old_packagefile  降级安装
+
+卸载
+rpm -e package_name
+    --nodeps
+校验
+rpm -V PACKAGE_NAME
+
+检验检验来源合法性 及软件完整性
+加密类型
+  对称 加密解密使用同一个秘钥
+  公钥 一对秘钥，公钥 私钥 公钥隐含私钥中，可以提出并公开
+  单向
+
+ls /etc/pki/rpm-gpg/
+  RPM-GPG-KEY-22-fedora
+  RPM-GPG-KEY-redhat-former
+
+rpm -k /path/to/PACKAGE_FILE
+     dsa gpg 验证来源合法性，签名 可以使用 --nosignature略过
+     sha1,md5 验证包完整性 可以使用--nodigest 略过
+先导入
+rpm --import /etc/pki/rpm-gpg/RPM-GPR-KEY-....
+再验证
+rpm -k package_file
+
+重建数据库 /var/lib/rpm
+rpm
+   --rebuilddb 重建数据库 无论有没有，都建立
+   --initdb  初始化数据库 没有猜建立，有就不用了 
+
+rpm-->yum  rpm的一个前端工具
+
+rpm缺陷，有的依赖关系手动解决比较难
+
+yum仓库中的元数据文件
+primary.xml.gz
+  所有rpm包的列表
+  依赖关系
+  每个rpm安装生成的文件列表
+filelists.xml.gz
+  当前仓库中所有rpm包的所有文件列表
+other.xml.gz
+  额外信息，rpm包的修改日志
+repomd.xml
+  记录上面三个文件的时间戳和校验和
+
+name=仓库描述
+baseurl=三种方式
+  ftp://
+  http://
+  file:///
+enabled={1|0}
+gpgchedk={1|0}
+gpgkey=验证秘钥
+
+yum
+yum list 列表
+   支持glob 通配符筛选
+   all 默认就是all
+   available 可用的，仓库中有但尚未安装的
+   installed 已经安装的
+   updates 可用的升级    
+yum clean 清理缓存
+   [packages |headers|metadata|dbcache|all]
+
+yum install package_NAME
+  -y
+   update 升级
+   update_to 升级为指定版本
+   remove|erase 卸载 默认会把依赖统统卸载掉
+   info 显示安装包信息
+   provides|whatprovides 查看指定文件或特性是由哪个包安装生成的
+   search 搜寻某个软件名称或者描述
+软件包组
+yum groupinfo
+    grouplist
+    groupinstall
+    groupremove
+    groupupdate
+
+如何创建yum仓库
+createrepo
+rpm安装
+  二进制格式
+源程序-->编译-->二进制格式
+   有些特性是编译选定的，如果编译未选择此特性，将无法使用
+   rpm包的版本会落后于源码包，甚至落后很多
+定制：手动编译安装
+
+编译环境，开发环境
+开发库，开发工具
+linux c开发的
+
+
+c,c++
+gcc  gun c complier
+g++  gun c++ complier
+
+make 项目管理工具
+  makefile 定义了make(调用gcc,g++...)按何种次序去编译源程序文件中的源程序
+automake,-->生成makefile.in makefile的半成品文件，需要进一步完善
+autoconf -->生成configure，配置当前程序如何编译的
+makefile.in + configure --> makefile --> make--> make install
+
+手动编译步骤3部
+前提，准备开发环境（编译环境）
+安装 "Development Tools"和"Development Libraries"
+tar
+cd
+必须在安装目录执行编译安装
+
+第一步
+./configure
+  --help
+  --prefix=/path/to/somewhere 安装路径
+  --conf-path=/path/to/confifile 配置文件路径
+ 功能 1.让用户选定编译特性 2 检查编译环境是否正确
+make
+make install
+1修过PATH环境变量以能够识别此程序的二进制文件 
+  修改/etc/profile文件 或者 在/etc/profile.d/里面建立以.sh为后缀的文件，在里面定义export PATH=$PATH:/path/to/somewhere
+  否则就需要/usr/local/tengine/sbin/nginx 启动
+2默认情况下，系统搜索库文件的路径通常只有/lib，/usr/lib; 需要增添额外搜寻路径
+  在/etc/ld.so.conf.d/中创建以.conf为后缀的文件,而后把要增添的路径直接写至此文件中
+    ldconfig重新搜寻库文件,不用重启
+      -v 显示重新搜寻库文件过程
+3头文件 #include  输出给系统
+  默认只有 /usr/include
+  增添头文件搜寻路径，使用链接就行
+      假设 /usr/local/tengine/include
+    ln -s /usr/local/tengine/include/* /usr/include 或
+    ln -s /usr/local/tengine/include /usr/include/tengine
+4.man文件路径，安装在--prefix指定的目录下
+  1 /etc/man.conf  里面MANPATH 添加一下路径
+  2 或者man -M /path/man_dir command
+
+手动编译安装无法使用rpm -e 快速卸载，所以都要安装在一个集中目录内，列如/usr/local/file_name   卸载时直接删除目录
+手动编译过程中出现缺少其他包，大多数都是缺少其他的开发包  name-devel,yum安装等解决
+

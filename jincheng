@@ -1,0 +1,186 @@
+ps
+pstree
+pgrep
+top
+vmstat
+free
+kill
+pkill
+bg
+fg
+
+ps:Pross state
+  SysV风格：-
+  BSD风格：
+
+ ps a 显示与终端有关的进程
+    u 显示由谁启动的
+    x 显示与终端无关的进程
+
+进程分类：
+    跟终端相关的进程
+    跟终端无关的进程
+进程状态：stat
+D 不可中断的睡眠
+R 运行或就绪
+大S 可中断的睡眠
+T 停止
+Z 僵死
+
+< 高优先级的进程
+N 低优先级的进程
++ 前台进程组中的进程,和终端相关的
+l 多线程进程 
+s 会话进程的首进程
+
+ps aux 头部含义
+USER  此进程的有效用户
+PID   进程id号 （PPID才代表父进程）
+%CPU  占用cpu时间的百分比
+%MEM  占用物理内存的百分比
+VSZ   虚拟内存级
+RSS   常驻内存级
+TTY  关联哪个终端
+STAT  进程状态
+START 启动时间
+TIME 运行时常，真正占据cpu的时常
+COMMAND 命令，加[]的进程代表内核线程
+
+ps -elF
+-e 显示所有进程
+-F 所有格式
+-l 长格式
+
+ps -o可以指定字段默只显示前台进程
+ps -o 字段1，字段2
+ps -o pid,comm,ni
+
+ps -axo pid.comm.ni 显示所有进程的pid command nice 值
+ps aux |grep "bash"
+
+pstree 显示进程数
+pgrep grep风格抓取进程
+pgrep bash
+pgrep -u root bash以root为属主运行的bash进程
+
+pidof 显示进程pid号
+pidof sshd
+pidof httpd
+pidof vsftpd
+
+top 监控每个进程
+
+top - 12:55:41(当前系统时间) up  4:02（系统运行时常）,  3 users（登录的用户）,  load average（平均负载）: 0.08（过去1分钟队列长度）, 0.04（过去5分钟队列长度）, 0.05（过去15分钟队列长度，值越小系统负载越小）
+Tasks（所有系统进程）: 143 total（总数）,   1 running（运行中）, 142 sleeping（睡眠）,   0 stopped（停止）,   0 zombie（僵死）
+%Cpu(s)（cpu负载，s代表平均值，按1将每个cpu负载都显示）:  0.0 us（user space用户进程占据的时间百分比）,  0.1 sy（system系统内核空间占比）,  0.0 ni（nice调整nice值后占用的百分比）, 97.8 id（空闲的cpu百分比）,  2.1 wa(wait等待IO完成所占据的时间),  0.0 hi（硬件中断占据的时间）,  0.0 si（软中断占比）,  0.0 st（被偷走的比例，比如虚拟化时）
+KiB Mem :  3907052 total,  3258532 free,   183648 used,   464872 buff/cache
+KiB Swap:  3932156 total,  3932156 free,        0 used.  3660744 avail Mem
+
+ID(PID号) USER（进程发起者）      PR（优先级）  NI（nice值）    VIRT（虚拟内存级）    RES（常驻内存）    SHR（共享库大小） S（状态）  %CPU（占用cpu） %MEM（占用内存）     TIME+（展示cpu时常） COMMAND（命令）
+
+top
+  M 根据驻留内存大小进行排序
+  P 根据cpu使用百分比进行排序
+  T 根据累计时间进行排序
+
+  l 是否显示平负载和启动时间
+  t 是否显示进行和cpu状态相关信息
+  m 是否显示内存相关信息
+
+  c 是否显示完整的命令行信息
+  q 退出
+  k 终止某进程
+
+  -d # 指定刷新间隔 单位秒 默认5秒一刷新
+  -b 使用批处理显示，翻屏
+  -b -n # 批处理模式显示几屏
+
+进程间通信（IPC Inter Process COmmunication）
+  共享内存
+  信号 Singal
+  Semaphore 旗语
+
+kill终止进程，多用于向其他进程发信号
+kill -l 显示所有可用的信号
+1 SIGHUP 让一个进程不用重启，就可以重读配置文件，并让新的配置文件生效
+2 SIGINT 相当于Ctrl+c 终端一个进程
+9 SIGKILL 强行杀死一个进程
+15 SIGTERM 终止一个进程，进程可以自然终止，文件该保存保存 kill 默认调用15号
+
+指定一个信号
+信号号码 kill -1
+信号名称  kill -SIGKILL
+信号简写  kill -KILL
+
+kill PID
+killall COMMAND_NAME
+
+调整nice值
+调整已经启动的进程的nice值
+renice NI pid
+
+在启动时指定nice
+nice -n NI COMMAND
+
+bg fg job
+前台作业  占据了命令提示符的
+后台作业  启动之后释放命令提示符，后续的操作在后台完成
+
+前台-->后台 
+Ctrl+z把已经在前台的送往后台,默认后台停止运行
+command & 让命令在后台执行
+命令后台运行，并脱离终端
+  nohup command &
+
+bg  让后台的停止作业继续在后台运行
+   bg  默认寻找+号作业，使其在后台执行
+   bg [%]jobid 后台执行作业号
+fg 将作业调回前台
+   fg
+   fg [%]jobid
+
+
+kill %jobid 终止某作业
+
+jobs 查看所有的作业，前台后台
+  作业号，不同于进程号
+    + 表示命令将要操作的作业
+    - 表示命令将第二个操作的作业
+
+vmstat 系统状态查看命令
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0      0 3213284  87304 425700    0    0     5     2   16   32  0  0 100  0  0
+
+procs 进程相关的内容
+  r 运行队列长度
+  b 阻塞队列长度
+memory 内存
+  swpd  交换内存
+  free 空闲
+  buff 缓冲
+  cache 缓存
+swap 动态值展示
+  si swapin 物理内存进入交换内存
+  so swapout 物理进入交换有回到内存
+io 磁盘--内存
+  bi block in磁盘块调入物理内存
+  bo blockout内存同步到磁盘快
+system
+  in 中断的个数
+  cs 上下文切换，进程切换的次数
+  us 用户空间占据
+  sy 内核占用
+  id 空闲
+  wa 等待
+  st 被偷走的
+
+vmstat 1每个1秒钟显示
+vmstat 1 5 每隔1秒钟显示，但只显示5条
+
+uptime 系统运行时间，top的第一行
+
+cat /proc/meminfo 内存信息
+
+
+

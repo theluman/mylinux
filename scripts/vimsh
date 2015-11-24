@@ -1,0 +1,51 @@
+#!/bin/bash
+#name:creatsh
+#author:Nine
+#Email:435904632@qq.com
+#version:0.0.1
+#date : 2015-07-23
+#description:
+
+#while getopts ":d:" args;do
+#        case $args in
+#        d):
+#                DESC=$OPTARG
+#                ;;
+#        *):
+#                echo "Usage: creatsh [ -d description ] FILENAME "
+#        esac
+#done
+#shift $[$OPTIND-1]
+
+if [ $# -lt 1 ];then
+  echo "Usage: creatsh [ -d description ] FILENAME"
+elif [ $1 == "-d" ];then
+  DESG=$2
+  shift 2
+fi
+
+if ! grep "[^[:space:]]" $1 &>  /dev/null  ;then
+cat << EOF > $1
+#!/bin/bash
+#name:`basename $1`
+#author:Nine
+#Email:435904632@qq.com
+#date:`date +%m/%d/%Y`
+#description:$DESC
+EOF
+fi 
+vim +  $1
+#until  bash -n  $1 &> /tmp/test/check ; do
+#        cat  /tmp/test/check
+#        read -p  "syntax error,q|Q for quiting,others for opening:" opt
+#        case $opt in
+#                q|Q):
+#                        echo "quit"
+#                        exit 1
+#                        ;;
+#                *):
+#                        vim $1
+#                        ;;
+#        esac
+#done
+chmod u+x  $1

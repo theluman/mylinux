@@ -1,0 +1,131 @@
+pki:证书，相互验证，证书的撤销列表。保证安全很重要，不能忽略
+PKI: public key infrastructure
+  CA certificate authority   证书颁发机构 （pki的核心）
+     证书格式 x509格式 pkcs12格式
+x509:
+   公钥及有效期限
+   证书的合法拥有者
+   证书该如何被使用
+   CA机构自己的信息
+   CA签名的校验码
+TLS/SSL使用的都是x509的证书格式
+
+pki的第二种实现：opengpg 格式和x509差不多
+
+SSL:secure socket layer 安全的套接字层
+SSLv1
+SSLv2
+SSLv3
+
+对称加密
+常见的对称加密算法：
+  DES: data encrption standard  56bit
+  3DES:
+  AES:高级加密标准，128bit
+    AES192,AES256,AES512
+  Blowfish
+实现工具 
+  openssl：ssl的开源实现
+    组件：libcrypto:通用加密库
+          libssl:TLS/SSL的实现
+            基于会话的实现了身份认证、数据机密性和会话完整性的库文件
+   openssl:多用途的命令行工具
+       模拟实现私有证书颁发机构
+         子命令
+单向加密：
+  MD4
+  MD5
+  SHA1
+  SHA192,SHA256,SHA384
+  CRC-32 循环冗余校验码，校验机制，不提供任何安全性
+
+公钥加密 （加密、签名）
+  身份认证（数字签名）
+  数据加密
+  秘钥交换
+  
+  RSA 加密，签名
+  DSA 签名
+  ElGamal 商业算法
+
+openssl 实现私有CA
+  1.生成一对秘钥
+  2.生成自签署的证书
+公钥是从私钥中提取的
+
+openssl genrsa 生成私钥
+openssl genrsa 2048 定义生成私钥的长度
+（括号内的内容都在子shell中执行，执行完退出）
+
+1.生成私钥
+openssl genrsa -out /PATH/TO/keyfilename numbers 生成私钥
+openssl rsa -in /PATH/to/keyfilename -pubout 提取公钥
+2.自签署
+req
+openssl req -new -x509 -key keyfilename -out server.crt -days 365  生成
+openssl x509 -text -in server.crt 查看
+以上很重要
+
+openssh
+OpenSSH(开源)
+ssh v1 v2
+客户端
+linux ssh
+windows putty,SecureCRT,SSHSecureShellClient,xmanager
+服务端
+sshd
+
+ssh认证
+配置文件
+/etc/ssh
+ssh_config
+sshd_config
+1.基于口令的认证，密码
+2.基于密钥，对暗号
+sshd:主机秘钥
+
+ssh 客户端
+  ssh -l loginname host 直接执登录主机
+  ssh -l loginname host ['command'] 直接执行命令不登录主机
+  ssh loginname@host
+  ssh -X 显示图形化下的窗口界面，本地必须是图形化，远程可以不是图形化
+  ssh -Y 同X 更安全
+
+基于秘钥的认证
+一台主机为客户端（基于某个用户实现）
+1.生成一对秘钥
+  ssh-keygen -t
+ssh-keygen 
+     -t {rsa|dsa} 指定加密算法
+     -f /path/to/keyfile 秘钥保存路径
+     -N 'password' 指定密码
+     -C '' 注释
+2.将公钥传输至服务器端某用户的家目录下的 .ssh/authorized_keys文件中
+  使用文件传输工具传输（ssh-copy-id,scp）
+ ssh-copy-id -i /path/to/pubkey username@remove_host
+3.测试登录
+
+scp 基于ssh的远程复制命令，可以实现在主机间传输数据
+  scp [options] SRC DEST
+远程文件格式
+  loginname@hostname:/path/filename
+ scp loginname@hostname:/path/filename ./    远程文件到本地
+ scp ./finename  loginname@hostname:/path/   本地文件到远程
+
+  -r 递归
+  -p 保留权限
+  -a 相当于-r -p
+
+sftp username@host
+ 支持ssh就能用sftp 传输过程还加密
+
+ssh安全策略
+ 密码经常换
+ 使用非默认端口
+ 限制登录客户地址
+ 禁止管理员直接登录
+ 仅允许限制用户登录
+ 使用基于秘钥的验证
+ 禁止使用版本1 
+
+

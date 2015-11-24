@@ -1,0 +1,5 @@
+login-name	password	home phone	office phone	user-type
+senrico	pipeclippers.,/@	13094037276	15001501031	special-admins 
+greiff	heavilyscuba.,/@	15315371217	15892965855	common
+gmoen	codinggazelle.,/@	15153790615	18651007406	common
+				

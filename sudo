@@ -1,0 +1,68 @@
+用户两类 
+管理员，普通用户
+su
+sudo command
+
+sudo提供的功能
+某个用户能够以另外哪一个用户的身份通过哪些主机执行什么命令
+需要输入密码
+
+sudo的配置文件 
+/etc/sudoers   
+440权限，定义了哪些用户可以使用sudo命令
+
+不建议vim编辑
+使用visudo 编辑
+
+一个sudo条目
+who which_hosts=(runas) command
+who which_hosts=(runas) TAG: command
+  TAG NOPASSWD 执行后面这些所有命令不需要输入密码
+      PASSWD 需要输入密码
+
+别名：类似定义了组
+ 4类别名
+
+who:User_Alias
+which_hosts: Host_Alias
+runas: Runas_Alias
+command:Cmnd_Alias
+
+别名必须全部而且只能使用大写英文字符的组合
+
+用户别名
+User_Alias USERADMIN =
+用户的用户名
+组名，使用%引导
+还可以包含其他已知用户别名
+User_Alias USERADMIN =user1,user2,%group1,%group2 
+
+Host_Alias
+主机名
+ip
+网络地址
+其他主机别名
+
+Runas_Alias
+用户名
+%组名
+其他的RUNAS别名
+
+Cmnd_Alias
+命令路径 绝对路径
+目录（此目录内的所有命令）
+其他事先定义过的命令别名
+Cmnd_Alias USERADMINCMND = /usr/sbin/useradd,/user/sbin/usermod,/user/bin/passwd
+Cmnd_Alias USERADMINCMND = /usr/sbin/useradd,/user/sbin/usermod,/user/bin/passwd,! /usr/bin/passwd root 限制不能给root改密码
+Cmnd_Alias USERADMINCMND = /usr/sbin/useradd,/user/sbin/usermod,/user/bin/passwd [A-Za-z]*,! /usr/bin/passwd root 限制不能给root改密码
+
+演示
+dong,root,useradd,usermod
+
+useradd,usermod
+
+sudo命令
+       -l 列出当前用户可以使用的所有sudo类命令
+       -k 让默认5分钟的密码认证信息失效
+
+sudo日志 /var/log/secure

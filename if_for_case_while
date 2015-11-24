@@ -1,0 +1,160 @@
+
+bash -n 脚本 检测脚本语法是否有错误
+bash -x 单步执行脚本
+
+exit:退出脚本 正常退出码是0
+exiet NUM 自定义退出码
+
+判断
+if 判断条件
+then
+ statement1
+ ...
+ ...
+fi
+
+if 判断条件
+then
+ statement1
+ .....
+ ....
+else
+ statement3
+ ......
+ ....
+fi
+
+if 判断条件
+then
+ statement1
+ ....
+ ...
+elif
+ statement3
+ ....
+ ....
+else
+ ...
+ ...
+fi
+
+if 判断条件;then
+else
+
+循环：进入条件，退出条件
+for,while,until
+
+for
+for 变量 in 列表;do
+    循环体
+done
+
+for 变量 in 列表
+do
+     循环体
+done
+
+生成列表
+{1..100}  1-100
+
+{起始数..结束数}
+`seq [起始数] [步进长度] 结束数`
+seq 10  1-10
+seq 5 10  5-10
+seq 1 2 10  1 3 5-9
+
+`ls /etc`
+
+面向过程
+  控制结构
+    顺序结构
+    选择结构
+      if:单分之 双分之 多分支
+    循环结构
+if执行速度慢，都要比较
+
+case:
+
+case SWITCH in
+value1)
+  statement
+  ...
+  ;;
+value2)
+  statement
+  ...
+  ;;
+*)
+  statement
+  ..
+  ;;
+esac
+_______________
+case $1 in
+[0-9])
+  echo "Lower" ;;
+[a-z])
+  echo "Upper" ;;
+*)
+  echo "Special character" ;;
+esac
+————————————
+case $1 in
+[0-9])
+  echo "Lower"
+  ;;
+[a-z])
+  echo "Upper"
+  ;;
+*)
+  echo "Special character"
+  ;;
+esac
+
+while：适用循环次数未知的场景
+while ... ;do
+  ....
+done
+
+untile ... ;do
+  ...
+done
+
+break 提前退出循环
+continue 结束本轮循环，进入下轮循环
+
+特殊用法：
+一直循环
+while :;do
+
+done
+until ...;do
+...
+done
+
+读取一个文件中的每一行，并分别处理
+while read LINE; do
+
+done < /PATH/TO/SOMEFILE
+
+函数：
+  实现代码重用
+定义一个函数：
+function FUNCNAME {
+command
+}
+或
+
+
+FUNCNAME() {
+command
+}
+调用：
+FUNCNAME
+FUNCNAME 参数 参数。。。
+自定义执行状态返回码：
+return #
+0-255
+
+接受参数的函数
+$1 $2

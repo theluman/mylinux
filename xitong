@@ -1,0 +1,61 @@
+linux启动流程
+POST(加电)-->BIOS(boot sequence启动顺序)-->MBR(bootloader,446bits，识别内核所在分区)-->kernel(探测硬件，启动，探测根文件系统等等)-->initrd-->init(init是用户空间的管理，/sbin/init)
+
+运行级别不同，启动的服务不同
+  运行级别 0-6 共7个
+    0 关机 halt
+    1 单用户模式 ，维护模式，single 直接以管理员身份进入，不需要密码 s,S,single,1
+    2 多用户multi界面，不挂载NFS
+    3 多用户界面，命令行
+    4 保留，无用,此前尚未定义
+    5 多用户模式，图形界面
+    6 reboot
+init配置文件（/etc/inittab）
+
+详解启动过程
+bootloader（MBR）安装操作系统提供
+  LILO: linux Loader 磁盘8G以下的引导，嵌入式
+  GRUB:Grand unified bootloader
+    stage1(MBR中)
+    stage1_5
+    stage2 /boot/grub
+grub.conf
+
+default=0  #设定默认启动的title的编号，从0开始
+timeout=5  #设定等待用户选择的超时时长，单位是秒
+splashimage=(hd0,0)/grub/splash.xpm.gz #grub的背景图片
+hiddenmenu #隐藏菜单
+password redhat
+
+title Red Hat Enterprise Linux Server (2.6.18-308.el5) #内核标题，或操作系统标题，可修改
+  root (hd0,0) #内核文件所做的设备，对grub而言，所有类型的硬盘一律为(hd#,N),#表示第几个设备，N表示对应磁盘的分区
+  kernel /vmlinuz-2.6.18-308.el5 ro root=/dev/vo10/root rhgb quiet #内核文件路径，及传递给内核的参数
+  initrd /initrd-2.6.18-308.el5.img #ramdisk文件的路径
+
+内核设计风格
+
+redhat,suse核心很小,布满孔洞，可以动态加载其他模块
+内核： /lib/modules/ 内核版本号命名的目录
+vmlinuz-2.6.32
+/lib/modules/2.6.32
+
+  单内核 所有功能都做进内核，单进程 linux属于单内核
+    模块化设计
+      核心:ko(kernel object)
+  微内核 内核只调动作用，调动其他子系统模块 windows属于微内核
+
+图片编辑工具 gimp
+grub-md5-crypt 设定grub加密的密码
+chroot 临时切换根，建立假根 命令
+ldd 显示共享库依赖关系
+  ldd /bin/bash
+runlevel 查看运行级别
+ N 3 n处表示前一个级别，n表示没有切换过级别，3表示当前级别
+who -r 查看运行级别
+
+查看内核相关信息
+ uname -r 显示当前内核版本号
+ uname -a 显示全部信息
+
+安装grub stage1
+需要接着理解，较难
