@@ -70,5 +70,203 @@ smp :多对称处理器，mysql对多处理器利用不好
  笛卡尔乘积：(a+b)*(c+d)=ac+ad+bc+bd
  并：集合运算
 
+SQL查询语句：
+  sequl -->SQL
+  sql-86
+  sql-89
+  sql-92
+  sql-99
+  sql-03
+  sql-08
+SQL 语言的组成部分
+  DDL
+  DML
+  完整性定义语言 DDL的一部分功能
+  视图定义
+  事务控制
+  嵌入式SQL和动态SQL
+  DCL:授权相关
+使用程序设计语言如何跟RDBMS交互：
+  嵌入式SQL:与动态sql类似，但是其语句必须在程序编译时完全确定下来，并由预处理器处理
+    ODBC
+  动态SQL:程序设计语言使用函数(mysql_connect()) 或者方法与RDBMS服务器建立连接，并进行交互通过建立的连接想服务器发送查询语句，并将结果保存至变量中而后进行处理
+    JDBC
+mysql基本组织结构：（mysql是插件式存储引擎）
+连接管理器
+线程管理器
+用户模块
+缓存  命令分发模块  日志模块
+解析器
+优化器 表定义模块 表维护模块 复制模块 状态报告模块
+访问控制模块
+表管理器
+存储引擎
+磁盘文件
 
+插件式存储引擎
+5.5.8默认： MyISAM 不支持事务，性能好，查询修改比较多的，适用于数据仓库
+5.5.8后默认： InnoDB 支持事务，适用于在线事务处理系统
 
+表管理器： 负责创建、读取或修改表定义文件：维护表描述符高速缓存:管理表锁
+  表结构定义文件
+表修改模块：创建表，删除，重命名，移除，更新，插入之类操作
+表维护模块：检查、修改、备份、恢复、优化（碎片整理）及解析
+
+行：定长，变长（定长查询速度快，非必要不用变长）
+文件中记录组织：
+  堆文件组织：一条记录可以放在文件中的任何地方
+  顺序文件组织：根据"所搜码"值顺序排序存放
+  散列文件组织：哈希算法，桶管理
+表结构定义文件，表数据文件
+表空间：table space,按需增长，跨表存储
+
+数据字典
+  关系的元数据
+    关系的名字
+    字段名字
+    字段的类型和长度
+    视图
+    完整性约束
+    用户名字，授权，密码
+
+缓冲区管理器
+  缓存置换策略
+  被盯住的块
+  最近最少策略
+  
+mysql
+ 完全多线程
+ 查询缓存
+
+mysql产品家族
+ mysql server(mysqld,mysql)
+ mysql Cluster  mysql集群，将多个mysql服务器组织起来
+ mysql proxy    mysql代理，命令分发，读写分离使用
+ mysql Adminitrator mysql可视化gui管理工具
+ mysql Query Brower 查询浏览器
+ mysql Workbench  数据库设计工具
+ mysql Migration toolkit 移植工具箱跨平台移植
+ mysql embedded server  嵌入式使用的
+ mysql drivers and connectors 驱动连接器
+
+mysql mariadb 
+percona
+
+mysql安装
+  专用软件包管理器包
+  deb,rpm
+  rpm:
+    rhel
+    suse
+  通用二进制包
+    gcc
+  源代码
+    5.5 5.6后不支持make,使用cmake,原因是能跨平台
+       cmake 编译
+
+版本 
+GA   发行版
+RC   发行候选
+beta 公测
+alpha 内侧
+
+mysql-client 客户端
+mysql-debuginfo 追踪调试mysql错误
+mysql-devel 开发包
+mysql-embedded 嵌入式环境报
+mysql-ndb-management Cluster集群组件
+mysql-server
+mysql-shared 共享库
+mysql-shared-compat 兼容老版本的shared的补充
+mysql-test 测试包
+
+目录结构
+bin
+data
+include
+lib
+man
+mysql-test
+scripts      mysql初始化脚本
+share        每一种错误信息的不同语言的版本
+sql-bench    基准性能测试包
+support-files 启动脚本 主配置文件样例等等
+
+中心配置文件my.cnf
+/etc/my.cnf
+/etc/mysql/my.cnf
+$MYSQL_HOME/my.cnf
+/path/to/file when defaults-extra-file=/path/to/file is specified
+~/.my.cnf
+mysql每次重启，上面的配置文件都会读取一遍，组合起来构成mysql配置，如果重复的，最后一次被读取的就是最有效的
+
+初始化产生5个用户，两个匿名用户不安全
+mysql 用户密码修改 3中方式
+1. mysqladmin -u USERNAME -h HOSTNAME password 'NEWPASSWORD' -p
+2. mysql> set password for 'USERNAME'@'HOST'=password('NEWPASSWORD')
+3. mysql> update mysql.user set password=password('NEWPASSWORD') where ..comdition;
+
+源码安装mysql
+make  依赖gcc,g++环境      
+cmake 依赖gcc,g++,和ncurses-devel包
+
+make                     cmake
+./configure             cmake .
+./configure --help      cmake . -LH 或 ccmake .
+make                    make
+make install            make install
+
+指定安装文件的安装路径是常用选项
+-DCMAKE_INSTALL_PREFIX=/usr/local/mysql
+-DMYSQL_DATADIR=/data/mysql
+-DSYSCONFDIR=/etc
+默认编译的存储引擎包括：csv,myisam,myisammrg和heap,（5.5默认不包含innodb,5.6默认就包含了）若要安装其他存储引擎，可以使用类似下列命令
+-DWITH_INNOBASE_STORAGE_ENGINE=1(安装innodb) 必须要，会用到
+-DWITH_ARCHIVE_STORAGE_ENGINE=1
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1  黑洞存储引擎
+-DWITH_FEDERATED_STORAGE_ENGINE=1 5.5不支持这个引擎
+
+若要明确指定不编译某存储引擎，可以使用
+-DWITHOUT_<>_STORAGE_ENGINE=1
+如
+-DWITHOUT_EXAMPLE_STORAGE_ENGINE=1
+-DWITHOUT_FEDERAIED_STORAGE_ENGINE=1
+
+若要编译进其他功能，如SSL等，则可使用类似选项来实现使用或不适用某库
+-DWITH_READLINE=1  用readline功能批量导入mysql数据，需要
+-DWITH_SSL=system  基于ssl复制  需要
+-DWITH_ZLIB=system  压缩库
+-DWITH_LIBWRAP=0  访问控制，没必要用
+
+其他常用的选项
+-DMYSQL_TCP_PORT=3306  端口
+-DMYSQL_UNIX_ADDR=/tmp/mysql.sock  套接字路径
+-DENABLED_LOCAL_INFILE=1 是否支持local文件
+-DEXTRA_CHARSETS=all  是否支持全部字符集
+-DDEFAULT_CHARSET=utf8 指定默认字符集
+-DDEFAULT_COLLATION=utf8_general_ci 默认字符集排序规则
+-DWITH_DEBUG=0 不启用debug功能
+-DENABLE_PROFILING=1 启用profiling mysql性能分析功能
+
+字符集：
+人：00100110 00101010
+人：10101011 10010001
+汉字：字符集  一种对应方式
+gbk gb2312 utf8
+
+排序规则
+同一个字符集，排序方式也有多种
+
+如果想清理此前编译生成的文件，需要使用
+make clean
+rm CMakeCACHE.txt
+
+编译安装过程
+roupadd -r mysql
+useradd -g mysql -r -s /sbin/nologin mysql
+chown -R mysql.mysql data_DIR
+tar xf mysql-5.5.25a.tar.gz
+cd mysql-5.5.25a
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/data/mydata -DSYSCONFDIR=/etc -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_LIBWRAP=0 -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci 
+make
+make install
