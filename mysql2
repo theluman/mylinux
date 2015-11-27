@@ -200,7 +200,7 @@ $MYSQL_HOME/my.cnf
 ~/.my.cnf
 mysql每次重启，上面的配置文件都会读取一遍，组合起来构成mysql配置，如果重复的，最后一次被读取的就是最有效的
 
-初始化产生5个用户，两个匿名用户不安全
+初始化产生6个用户，4个本地用户，::1的是ipv6地址的，两个匿名用户不安全,应该删掉
 mysql 用户密码修改 3中方式
 1. mysqladmin -u USERNAME -h HOSTNAME password 'NEWPASSWORD' -p
 2. mysql> set password for 'USERNAME'@'HOST'=password('NEWPASSWORD')
@@ -264,9 +264,54 @@ rm CMakeCACHE.txt
 编译安装过程
 roupadd -r mysql
 useradd -g mysql -r -s /sbin/nologin mysql
-chown -R mysql.mysql data_DIR
+mkdir DATA_DIR  (数据一般放在lvm卷上，可扩展)
+chown -R mysql.mysql DATA_DIR
 tar xf mysql-5.5.25a.tar.gz
 cd mysql-5.5.25a
-cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=/data/mydata -DSYSCONFDIR=/etc -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_LIBWRAP=0 -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci 
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DMYSQL_DATADIR=DATA_DIR -DSYSCONFDIR=/etc -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_LIBWRAP=0 -DMYSQL_UNIX_ADDR=/tmp/mysql.sock -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci 
 make
 make install
+cd /usr/local/mysql
+ chown -R :mysql /usr/local/mysql
+ scripts/mysql_install_db --user=mysql --datadir=/data 初始化数据库
+ cp support-files/my-large.cnf /etc/my.cnf   复制配置文件样例
+ cp support-files/mysql.server /etc/init.d/mysqld  复制启动文件
+ chkconfig --add mysqld
+ chkconfig --list mysqld
+ systemctl start mysqld
+启动成功
+为了能直接启动mysql客户端
+ vim /etc/profile.d/mysql.sh
+   export PATH=$PATH:/usr/local/mysql/bin
+ 执行一下脚本 . /etc/profile.d/mysql.sh
+ 路径生效   echo $PATH
+mysql 链接成功
+确保配置文件 /ect/my.cnf 中添加 datadir = /data 数据路径是正确的
+
+ssl 需要openssl openssl-devel
+cmake . 配置错误日志在软件包目录下CMakeFiles/ CMakeError.log   CMakeOutput.log等
+
+mysql -->mysqld
+客户端和服务端在同一台主机，通过sock
+mysql -->mysql.sock -->mysqld
+不在同一台主机，基于tcp/ip协议
+
+mysql 客户端工具
+  mysql 常用
+  mysqldump 常用
+  mysqladmin 常用
+  mysqlcheck
+  mysqlimport
+配置文件[client] 都能对上述工具生效
+客户端都支持命令
+  -u USERNAME
+  -p PASSWORD
+  -h 主机
+  --protocol {tcp|socket|pipe|memory} 指定协议 只有tcp
+  --port  指定端口
+非客户端工具
+  myisamchk
+  myisampack
+
+show engines;  显示存储引擎
+
