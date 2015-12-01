@@ -287,6 +287,24 @@ cd /usr/local/mysql
  路径生效   echo $PATH
 mysql 链接成功
 确保配置文件 /ect/my.cnf 中添加 datadir = /data 数据路径是正确的
+删除匿名用户
+给root用户加密码
+flush privileges; 刷新
+
+需要本地方便访问mysql，不重复输入密码，可以建立~/.my.cnf
+  内容
+  [client]
+  user = 'root'
+  password = 'centos'
+  host = 'localhost'
+即可
+
+如果忘记mysql密码
+ 1.停掉mysqld服务
+ 2.my.cnf中 [mysqld]段中加入 skip-grant-tables
+ 3.启动mysqld服务
+ 4.mysql链接，重设密码，测试登录
+ 5.删掉skip-grant-tables，重启服务
 
 ssl 需要openssl openssl-devel
 cmake . 配置错误日志在软件包目录下CMakeFiles/ CMakeError.log   CMakeOutput.log等
@@ -315,3 +333,100 @@ mysql 客户端工具
 
 show engines;  显示存储引擎
 
+mysql 数据文件
+cd /data/mysql
+ls
+myisam引擎，每一个表都有3个文件
+  .frm 表结构定义文件
+  .MYD 表存储的数据文件
+  .MYI 表索引文件
+innodb：
+  .frm 表结构
+  .ibd 表空间,表数据和索引
+  .opt 存储默认字符集和排序规则
+  支持所有表共享一个表空间文件，但是不太好
+  建议定义每个表一个单独的表空间，默认不打开
+   启用方法：
+     mysql链接
+     show variables like '%innodb'; 查找innodb可用选相，innodb_file_per_table复制，加入my.cnf mysqld段 innodb_file_per_table = on|1
+
+mysql客户端使用：
+musql
+  --user,-u
+  --host,-u
+  --password,-p
+  --port
+  --protocol
+  --database DATABASE,-D
+select database(); 查看默认操作的数据库
+其他选项：
+   --compress 语句先压缩在返回
+   --ssl-ca=/file
+   --ssl-capath=/path/dir
+mysql>
+  交互式
+  批处理模式（脚本模式）
+     命令行模式下： mysql -uroot -p < init.sql(.sql 里面就是通常写的mysql语句)
+     mysql客户端里面使用 source /root/init.sql或者简写 \. /root/init.sql
+mysql命令有两类
+  客户端命令
+     \c  提前终止语句执行
+     \r  重新连接至mysql服务器
+     \d  指定结束符
+     \g  无论语句结果是什么，直接将语句送至服务端执行
+     \G  无论语句结束符是什么，直接将语句送至服务端执行，并且将结果以竖排显示
+     \q 退出
+     \p  显示你当前执行的命令
+     \. *.sql 加载*.sql语句批处理文件
+     \s 获取服务器信息
+     \! shell-command 不退出mysql执行shell命令
+     use或\u 使用哪个mysql作为默认操作数据库
+     \W 语句执行结束后显示警告信息
+     \w 不显示警告信息
+     \R修改mysql > 的提示符
+> 可以输入语句
+-> 语句没写完或者缺少结束符
+'>缺少单引号的后一半
+">缺少双引号的后一半
+`>缺少反引号的后一半
+*/>缺少多行注释的后一半
+
+常用技巧
+ 补全
+   名称补全，字段补全，使用会导致链接速度慢
+     -A 链接时候启用补全功能
+     \# 对新建的对象支持补全功能
+mysql输出格式
+     mysql --html 输出为html格式
+     mysql  --xml 输出xml格式     
+
+  mysqladmin [options] command [arg] [command [arg]]...
+      create DATABASE不连接创建数据库
+      drop DATABSE
+      ping       ping mysqld是否在线
+         mysqladmin ping
+         mysqladmin -uroot -h ... -p ping
+       processlist 正在执行的线程列表
+      status       mysql状态
+         status --sleep 2 --count 2  没两秒钟显示一次，一共显示2个
+       extended-status 显示状态变量，监控mysql重要手段
+       variables: 显示服务器变量
+       flush-privileges 让mysql重读授权表，权限表
+       flush-status 重置绝多大数的服务器状态变量，重新计数
+       flush-tables
+       flush-threads 重置线程池
+       flush-logs  作日志滚动，主要是实现二进制和中继日志滚动
+       flush-hosts 
+       kill 杀死一个mysql内部线程
+       reload = flush privileges
+       refresh = 同时执行flush-hosts和flush-logs
+       shutdown 停止mysql服务器
+       version 版本号，相关状态信息
+       start-slave 启动从服务器的复制线程
+          sql thread
+          io thread
+       stop-slave  关闭
+mysqldump备份,mysqlimport导入,mysqlcheak
+  服务器语句,要有语句结束符，默认分号，可以\d定义 \d //
+     获取帮助
+      help KEYWORD    help select,help create index

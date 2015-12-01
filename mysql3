@@ -1,0 +1,126 @@
+开发视角
+  数据类型
+  约束
+  数据库，表，索引，视图
+  select语句
+存储引擎，也被成为表类型，同数据库的多张表可以使用不同的存储引擎
+ MyISAM表，不支持事务，支持表级别的锁
+   .frm  表结构定义文件
+   .MYD  表数据
+   .MYI  索引
+ Innodb 支持事务，支持行级别的锁，默认配置不支持美标一个表空间，需要开启
+   .frm 表结构
+   .ibd 表空间，存储数据和索引
+
+mysql: 
+  mysql默认存储引擎都是MyIASM
+  其他建立的数据库，存储引擎，依据默认数据库配置，show engines;查看存储引擎
+    show table status [like 'user']; 查看表的属性信息
+    show table status like 'user'\G; 查看表的属性信息，竖排显示
+程序语言链接数据库方式：
+  动态sql:通过函数或方法与数据库服务建立链接
+  嵌入式sql:api链接，需要编译
+  JBDC
+  ODBC
+客户端组件 mysql,mysqladmin,mysqldump,mysqlimport,mysqlcheck
+服务器 mysqld,mysqld_safe,mysqld_multi
+/etc/my.cnf  /etc/mysql/my.cnf  $mysql_home/my.cnf  --default-extra-file=/path/to/somefile  ~/.my.cnf
+[mysqld]
+[mysqld_safe]
+[client]
+[mysql]
+mysql配置文件中的绝大多数的参数都能在命令行执行 加上--
+mysqld --help --verbose 可以显示默认可以使用的参数，可以写在配置文件中的参数
+
+启动失败原因
+1.曾经启动过的mysql没有停止  killall mysqld
+       错误日志在 /data/hostname.err
+2.启动如果没有错误日志，有启动失败，那是数据目录指定错了
+3.数据初始化失败
+4.数据目录权限问题
+
+DBA
+  开发DBA  数据库设计，写SQL语句，存储过程，存储函数，触发器
+  管理DBA  安装，升级，备份恢复，用户管理，权限管理，监控，性能分析，基准测试
+
+数据类型
+ 数值型
+    精确数值型
+      int  整数
+      decimal 十进制
+    近似数值型
+      float
+      double
+      real 实数
+ 字符型
+      定长字符型
+         char（#）
+         binary（#） 区分大小写的
+      变长的
+         vachar（#）
+         varbinary（#） 区分大小写的
+      text,blob 大字符型
+      enum set
+ 日期时间型
+      date,time,datetime,timestamp
+数据类型用处：
+ 能够表示那类数据
+ 最大最小值，占据多少空间
+ 变长的定长的
+ 如何比较排序，是否区分大小写
+ 是否能被创建索引
+
+int
+ tinyint   1字节
+ smallint  2
+ mediumint 3
+ int       4
+ bigint    8
+decimal 精确定点数，十进制数
+float 单精度浮点型  4字节
+double 双精度       8字节
+bit    按位存储
+
+char
+varchar
+binary
+varbinary
+blob  二进制大对象,区分大小写
+ tinyblob
+ blob
+ mediumblob
+ longblob
+text 不区分大小写
+ tinytext
+ text
+ mediumtext
+ longtext
+enum 枚举 录入值不能超出enum指定的，单值
+set 集合  集合内的值随意组合，多值
+域属性，修饰符（定义域限制）
+
+date
+time
+datetime
+timesiamp
+year(4)
+year(2)
+
+char(#)  #个字符  #<=255
+varchar(#) 255个以内每个数据占据#+1个字节空间,多一个结束符，超过255，需要两个结束符   最多存储65535个字符
+tinytext  255个字符 每个数据多占一个字节
+text      6万多个字符 每个数据多占2个
+mediumtext  1600多万个 每个数据多占3个
+longtext   4亿多个   每个数据多占4个
+
+修饰限定 
+not null  默认不能为空
+null 默认空
+default 给默认值
+字符集，排序规则
+ show character set;查看支持的所有字符集
+字符集是继承关系，字段继承表，表继承库，库继承默认设置
+
+
+
+sql语句
