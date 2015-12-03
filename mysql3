@@ -60,7 +60,7 @@ DBA
          vachar（#）
          varbinary（#） 区分大小写的
       text,blob 大字符型
-      enum set
+      enum set限定值的字段
  日期时间型
       date,time,datetime,timestamp
 数据类型用处：
@@ -109,9 +109,9 @@ year(2)
 char(#)  #个字符  #<=255
 varchar(#) 255个以内每个数据占据#+1个字节空间,多一个结束符，超过255，需要两个结束符   最多存储65535个字符
 tinytext  255个字符 每个数据多占一个字节
-text      6万多个字符 每个数据多占2个
-mediumtext  1600多万个 每个数据多占3个
-longtext   4亿多个   每个数据多占4个
+text      6万多个字符 每个数据多占2个 64kb
+mediumtext  1600多万个 每个数据多占3个 16M
+longtext   4亿多个   每个数据多占4个  4G
 
 修饰限定 
 not null  默认不能为空
@@ -120,7 +120,78 @@ default 给默认值
 字符集，排序规则
  show character set;查看支持的所有字符集
 字符集是继承关系，字段继承表，表继承库，库继承默认设置
+ show collation; 查看支持的所有排序规则
 
+区分大小写的字符串
+  tinyblob
+  mediumblob
+  longblob
+  blob
 
+  binary
+  varbinary
 
+init
+ tinyint
+ smallint
+ mediumint
+ int
+ bigint
+
+auto_increment 自动增长，默认从1开始，步长为1，如果一个字段定义了此类型，一定不能为空，其次一定要创建创建索引，要么是主键索引，要么是唯一键索引
+select last_insert_id(); 查看最后一个id
+  使用auto_increment条件
+    必须是整型
+    只能包含正数，不能使负数，所以声明成 unsigend就行 无符号的整形
+    必须有索引主键或唯一键
+    not null
+      create table test(id int unsigend auto_increment not null primary key,name char(20),...)
+
+float
+
+数值型可以使用的修饰符 not null,null,default,auto_increment,unsigend,zerofill(多余位用0填充)
+
+bool <==> tinyint(1)
+  1
+  0
+
+date
+  date '1000-01-01' to '9999-12-31' 占据3个字节
+  time '-838:59:59'to'838:59:58'  3 bytes
+  datetime '1000-01-01 00:00:00'to '9999-12-31 23:59:59' 8 bytes
+  timestamp '1970-01-01 00:00:00'to'2038-01-18 22:14:07' 4 bytes
+  year(2) 00 to 99         1 byte
+  year(4) 1901 to 2155     1 byte
+ 默认值对应是0
+修饰 not null,null,default
+
+enum枚举,set集合
+  enum 最多可以表示65535种变化，即供用户选择的选项
+    使用 定义字段 RRtype enum('A','MX','NS') ,week eunm('MONDAY','TUESDAY','WEDNESDAY',...)
+  set:集合，可以随意排列组合，存储的方式不是存的字符，而是存的数据的索引，位图，无法索引排序
+
+sql模型
+  ansi quotes
+
+mysql服务器变量：
+  作用域，分为两类
+    全局变量，全局起作用，永久
+      show global variables like '...'
+    会话变量，只对当前的mysql链接起作用
+      show [session] variables like '...'
+
+  生效时间划分，分为两类：
+    可动态调整
+       可以即时调整，即时生效
+    静态的
+       写在配置文件中
+       通过参数传递给mysqld
+  动态调整参数的生效方式：
+     全局：对当前会话无效，只对新建立的会话有效
+     会话：即时生效，但只对当前会话有效，会话关闭后有无效
+  服务器变量：@@变量名
+     显示：select
+     设定 set 
+    select @@global.sql.mode
+    set global|session 变量名='值'
 sql语句

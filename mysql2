@@ -202,9 +202,11 @@ mysql每次重启，上面的配置文件都会读取一遍，组合起来构成
 
 初始化产生6个用户，4个本地用户，::1的是ipv6地址的，两个匿名用户不安全,应该删掉
 mysql 用户密码修改 3中方式
-1. mysqladmin -u USERNAME -h HOSTNAME password 'NEWPASSWORD' -p
+1. # mysqladmin -u USERNAME -h HOSTNAME password 'NEWPASSWORD' -p
 2. mysql> set password for 'USERNAME'@'HOST'=password('NEWPASSWORD')
-3. mysql> update mysql.user set password=password('NEWPASSWORD') where ..comdition;
+3. mysql> update mysql.user set password=password('NEWPASSWORD') where User='root';
+    mysql> update mysql.user set password=password('NEWPASSWORD') where User='root' and Host='127.0.0.1';
+      and,or,not
 
 源码安装mysql
 make  依赖gcc,g++环境      
