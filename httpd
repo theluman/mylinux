@@ -172,3 +172,53 @@ serverName不同
 
 serverstatus
 
+
+编译安装httpd2.4
+
+http+php实现方式
+CGI   
+   客户端发送php请求给http，http启动cgi进程送给php服务器解析，解析后，通过cgi进程传回给http,cgi进程销毁
+Module   
+    http内部引入php模块，请求来了，内部交给模块解析，在返回
+FastCGI/fpm 
+    php服务器内部引入，一直维护若干空闲cgi进程，客户端请求到了http,http就像fastcgi要一个cgi进程，把请求送给php解析，cgi进程由fastcgi维护
+
+服务器构成：web服务器+应用程序服务器+数据服务器
+
+优化：
+应用程序服务器，缓存字节码，如php xcache
+动态内容缓存为静态化
+
+LAMP
+  http
+  php53
+  php53-mysql
+  mysql-server
+LAMP是最需要手动编译进行定制的平台
+编译配置LAMP
+  linux,Apache,MySQL,PHP(python,perl)
+
+  httpd 2.4.4 源码
+  mysql 5.6.10(rpm,通用二进制，源码)
+  php 5.4.13 源码
+安装是有先后关系的
+apr --> apr-util --> httpd
+httpd --> Mysql --> php -->XCache
+编译php时候需要依赖mysql头文件
+
+apr： Apache Portable Runtime httpd的虚拟机，方便各平台移植，linux原有就装好的
+rpm -q apr 
+rpm -q apr-util  util工具包
+       apr-iconv 比较好，用不到了
+rpm 包
+ /bin /sbin /usr/bin /usr/sbin
+    bin,sbin
+    lib
+    etc
+    share/{doc,man}
+编译
+  /usr/local/apr
+
+编译安装先看系统时间，别出现安装包是来自未来的
+
+
