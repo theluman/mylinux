@@ -202,14 +202,12 @@ LAMP是最需要手动编译进行定制的平台
   mysql 5.6.10(rpm,通用二进制，源码)
   php 5.4.13 源码
 安装是有先后关系的
-apr --> apr-util --> httpd
-httpd --> Mysql --> php -->XCache
+apr --> apr-util --> httpd --> Mysql --> php -->XCache
 编译php时候需要依赖mysql头文件
 
 apr： Apache Portable Runtime httpd的虚拟机，方便各平台移植，linux原有就装好的
 rpm -q apr 
 rpm -q apr-util  util工具包
-       apr-iconv 比较好，用不到了
 rpm 包
  /bin /sbin /usr/bin /usr/sbin
     bin,sbin
@@ -217,8 +215,14 @@ rpm 包
     etc
     share/{doc,man}
 编译
-  /usr/local/apr
+  /usr/local/
+     bin,sbin
+     lib
+     etc
+     share
+/usr/local/apr
+   bin,sbin,lib,includes,etc,share/man
 
 编译安装先看系统时间，别出现安装包是来自未来的
-
+视频24——01
 

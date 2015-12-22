@@ -1,0 +1,26 @@
+man    
+章节
+      1.用户命令(/bin,/usr/bin,/usr/local/bin)
+      2.系统调用
+      3.库用户
+      4.特殊文件(设备文件)
+      5.文件格式(配置文件语法)
+      6.游戏
+      7.杂项
+      8.管理命令(/sbin,/usr/sbin,/usr/local/sbin)
+
+<> 必选
+[] 可选
+... 可以出现多次
+|   多选一
+{}  分组
+
+man:
+  name  命令名称及功能简要说明
+  synopsis  用法说明，包括可用的选项
+  description  命令功能的详尽说明，可能包含每一个选项的意义
+  options   说明每一个选项的意义
+  files     与此命令相关的配置文件
+  bugs
+  examples 使用示例
+  see also  另外参照

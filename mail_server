@@ -1,0 +1,10 @@
+smtp: simple mail tansfer protocol 非常简单的邮件传输协议 
+esmtp: extended 扩展的简单传输协议扩展一点点而已
+
+pop3:post office protocol 邮件协议 主流使用
+imap4: internet mail access protocol,消耗资源较多
+
+smtpd:监听（25/tcp）
+邮件传输：MT
+邮件投递: MD
+

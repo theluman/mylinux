@@ -1,0 +1,71 @@
+ls
+  -l：长格式
+    文件类型：
+       -：普通文件
+       d: 目录文件
+       b: 块设备文件(block)
+       c: 字符设备文件(character)
+       l: 符号链接文件(symbolic link)
+       p: 命令管道文件(pipe)
+       s: 套接字文件(socket)
+    -rw-rw-r--. 1 chao chao   376 Nov 19 08:39 stdout_in_err
+    文件权限：9位，ugo,rwx
+    文件硬链接的次数
+    文件的属主
+    文件的属组
+    文件的大小，默认单位是字节
+    时间戳(timestamp): 默认显示最近一次被修改的时间
+    文件名
+  -h: 做单位转换，人类易读的单位
+  -a: 显示以.开头的隐藏文件
+      . 当前目录
+      .. 父目录
+  -A: 显示以.开头的文件，但不显示.和..这两个文件
+  -d: 显示目录自身属性
+  -i: index node,inode号
+  -r: 逆序显示
+  -R: 递归显示
+
+cd
+  ~/username: username的家目录
+  -: 在当前目录和上一个目录来回切换
+
+pwd
+
+mkdir 创建空目录
+  -p 递归创建父目录
+  -v 显示详细信息
+命令行展开
+mkdir -pv /mnt/test/{x/m,y}
+(a+d)(b+c)=ab+ac+db+dc
+{a,d}_{b,c}    
+
+tree查看目录树
+
+删除目录 
+  rmdir 删除空目录
+  rm
+    -r
+    -f
+    -i
+
+touch
+  -a
+  -m
+  -t
+  -c
+file,type,stat
+
+cp
+ cp source dest
+ 一个文件到一个文件
+ 多个文件到一个目录
+  -r || -R  递归复制
+  -i 提示
+  -f 强制覆盖
+  -p 保持文件原有属性
+  -a 归档，冲用于备份
+
+mv source dest
+mv -t dest source
+
