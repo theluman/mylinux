@@ -125,4 +125,3 @@ $* $@ 参数列表
 declare 
  -i    declare -i sum=0   定义整数型变量
  -x   declare -x SUM=ii   将变量声明为环境变量
-

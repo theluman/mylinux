@@ -6,18 +6,41 @@ linux 基本原则
 
 Classify
 
-Base_Command
-  日期时间处理 --> date_time
-  
+!n 执行命令历史中的第n条命令
+!-n 多数第n条命令
+!string 执行最后一个以string开头的命令
+!!执行上一条命令
+!$ 引用上一个命令的最后一个参数
+$? 命令执行结果
+
+命令行
+  ctrl+a 跳到命令行首
+  ctrl+e 跳到命令行尾
+  ctrl+u 删除光标至命令行首的内容
+  ctrl+k 删除光标至命令行尾的内容
+  ctrl+l 清屏 clear
+
+  alias 命令别名
+    alias CMDALIAS='command [options] [arguments]'
+
+  命令替换
+   `` == $()
+
+Base
   文件或目录处理 --> file_dir
-     
-   man  --> man
-
+        ls,cd,pwd,mkdir,命令行展开,rm,touch,cp,mv
+        文件时间戳,find,tar   
   文本处理  --> text
-
+        cat,join,more,less,head,tail,cut,sort,uniq,wc,tr
+        grep,sed,awk,printf格式输出，正则表达式
+  用户，组，权限 -->user
+        useradd,userdel,id,usermod,finger,passwd,groupadd,groupdel,groupmod,chage,chgrp,umask,bash配置文件，chown,chmod,特殊权限，setfacl,....
+  
   管道和重定向 --> pipe
 
-  用户，组，权限 -->user
+   man  --> man
+
+  日期时间处理 --> date_time
 
   
    
