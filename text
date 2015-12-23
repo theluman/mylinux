@@ -56,6 +56,14 @@ tr 'source' 'dest' 替换字符集
  [abc],[a-m],[a-z],[A-Z],[0-9],[a-zA-Z]
 [^] 匹配指定范围内的任意单个字符
 
+[:space:] 空白字符
+[:punct:] 标点符号
+[:lower:] 小写字母
+[:upper:] 大写字母
+[:alpha:] 大小写字母
+[:digit:] 数字
+[:alnum:] 数字和大小写字母
+
 正则REGular EXPression REGEXP
 元字符：
 
@@ -109,7 +117,6 @@ grep -E = egrep
 
 |或
 (c|C)at
-
 
 grep [OPTIONS] PATTERN [FILE...]
 grep
