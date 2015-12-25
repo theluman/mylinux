@@ -214,3 +214,8 @@ ln [-s -v] source dest  都使用绝对路径
 du 磁盘占用空间大小
   -s 整个目录大小
   -h
+
+df 显示分区使用情况
+  df -h 换算单位
+  df -i 显示inode
+     -P 不换行显示

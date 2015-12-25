@@ -1,0 +1,62 @@
+MBR 主引导记录（512byte）
+Master Boot Record
+Main Boot Record
+  446bytes: BootLoader,程序
+  64bytes:
+      16bytes: 标识一个主分区，最多4个主分区
+  2bytes: Magic Number
+      标记MBR是否有效
+
+转速越快，巡道时间越短，性能越好
+
+设备文件
+ b 按块为单位，随机访问的设备
+ c 按字符为单位，线性设备
+
+ b 硬盘
+ c 键盘
+
+/dev
+ 主设备号（major number）
+   标识设备类型
+ 次设备号(minor number)
+   标识同一种类型中不同设备
+  
+mknod 创建设备文件  man mknod
+
+硬盘的设备文件名
+IDE,ATA类型硬盘  以hd开头
+SATA,SCSI,USB 都以sd开头
+  a,b,c,...来区别同一种类型下的不同设备
+
+IDE
+ 第一个IDE口，主，从
+   /dev/hda,/dev/hdb
+ 第二个IDE口，主，从
+  /dev/hdc,/dev/hdd
+
+sda,sdb,sdc,....
+
+主分区最多4个，扩展分区只能一个，逻辑分区多个
+sda1,sda2,sda3,sda4,主分区
+逻辑分区从5开始
+sda1,sda2,sda5
+
+fdisk -l 列出当前系统上识别的的所有磁盘,有*的表示引导所在的
+fdisk -l [/dev/sda1]
+
+管理磁盘分区：创建分区，在分区格式化后才能使用
+fdisk /dev/sda
+  p 显示当前硬件分区，包括没保存的改动
+  n 创建新分区
+  d 删除一个分区
+  w 保存退出
+  q 不保存退出
+  t 修改分区类型
+  l 显示所有支持的分区类型
+cat /proc/partitions  查看分区有没有被内核识别
+partprobe    重读分区表，是内核识别修改，修改生效
+
+分区格式化：
+ext4,ext3,ext2
+

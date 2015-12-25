@@ -29,18 +29,22 @@ $? 命令执行结果
 Base
   文件或目录处理 --> file_dir
         ls,cd,pwd,mkdir,命令行展开,rm,touch,cp,mv
-        文件时间戳,find,tar,ln   
-  文本处理  --> text
-        cat,join,more,less,head,tail,cut,sort,uniq,wc,tr
-        grep,sed,awk,printf格式输出，正则表达式 ____
-  用户，组，权限 -->user
-        useradd,userdel,id,usermod,finger,passwd,groupadd,groupdel,groupmod,chage,chgrp,umask,bash配置文件，chown,chmod,特殊权限，setfacl,....
+        文件时间戳,find,tar,ln,du,df   
   
-  管道和重定向 --> pipe
+   磁盘，文件系统相关  -->raid_lvm
+        
+         
 
-   man  --> man
-
-  *日期时间处理 --> date*
+  用户，组，权限 -->user
+        useradd,userdel,id,usermod,finger,passwd,groupadd,groupdel,groupmod,chage,chgrp,umask,bash配置文件，chown,chmod,特殊权限，setfacl，终端用户登录查看记录等
+  
+   *日期时间处理 --> date*，文字颜色相关 --> colour_font，man  --> man，管道和重定向 --> pipe
 
    程序  --> bianliang
-     变量，整数比较，字符测试，文件测试，数字运算，逻辑运算，if,case,for,while,函数，数组 ____
+     变量，整数比较，字符测试，文件测试，数字运算，逻辑运算，if,case,for,while,函数，数组__
+  
+   文本处理  --> text
+        cat,join,more,less,head,tail,cut,sort,uniq,wc,tr
+        grep,sed,awk____,printf格式输出，正则表达式
+   
+   
