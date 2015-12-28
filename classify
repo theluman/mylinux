@@ -26,14 +26,17 @@ $? 命令执行结果
   命令替换
    `` == $()
 
+
+
+
+
 Base
   文件或目录处理 --> file_dir
         ls,cd,pwd,mkdir,命令行展开,rm,touch,cp,mv
         文件时间戳,find,tar,ln,du,df   
   
-   磁盘，文件系统相关  -->raid_lvm
-        
-         
+   磁盘，文件系统相关  -->raid_lvm______
+           我的弱点
 
   用户，组，权限 -->user
         useradd,userdel,id,usermod,finger,passwd,groupadd,groupdel,groupmod,chage,chgrp,umask,bash配置文件，chown,chmod,特殊权限，setfacl，终端用户登录查看记录等
