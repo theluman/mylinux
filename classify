@@ -50,4 +50,3 @@ Base
         cat,join,more,less,head,tail,cut,sort,uniq,wc,tr
         grep,sed,awk____,printf格式输出，正则表达式
    
-   
