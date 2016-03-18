@@ -141,3 +141,28 @@ vim -O  垂直分割显示
 当前用户 ~/.vimrc
 
 vimtutor
+
+不自动添加注释
+set fo-=cro
+-r: 按回车不会添加注释
+-o 按o不会添加注释
+-c:重新格式化长注释行不会添加注释
+
+set cursorline 高亮光标所在列
+
+vundle使用
+:h vundle               -查看帮助
+
+:BundleList             -列举列表(也就是.vimrc)中配置的所有插件
+
+:BundleInstall          -安装列表中的全部插件
+
+:BundleInstall!         -更新列表中的全部插件
+
+:BundleSearch ***       -查找插件
+
+:BundleSearch! ***      -刷新插件缓存
+
+:BundleClean            -清除列表中没有的插件
+
+:BundleClean!           -清除列表中没有的插件
