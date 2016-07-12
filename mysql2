@@ -264,7 +264,7 @@ make clean
 rm CMakeCACHE.txt
 
 编译安装过程
-roupadd -r mysql
+groupadd -r mysql
 useradd -g mysql -r -s /sbin/nologin mysql
 mkdir DATA_DIR  (数据一般放在lvm卷上，可扩展)
 chown -R mysql.mysql DATA_DIR
