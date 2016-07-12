@@ -6,19 +6,19 @@ linux 基本原则
 
 Classify
 
-!n 执行命令历史中的第n条命令
-!-n 多数第n条命令
-!string 执行最后一个以string开头的命令
-!!执行上一条命令
-!$ 引用上一个命令的最后一个参数
-$? 命令执行结果
+    !n 执行命令历史中的第n条命令
+    !-n 多数第n条命令
+    !string 执行最后一个以string开头的命令
+    !!执行上一条命令
+    !$ 引用上一个命令的最后一个参数
+    $? 命令执行结果
 
 命令行
-  ctrl+a 跳到命令行首
-  ctrl+e 跳到命令行尾
-  ctrl+u 删除光标至命令行首的内容
-  ctrl+k 删除光标至命令行尾的内容
-  ctrl+l 清屏 clear
+    ctrl+a 跳到命令行首
+    ctrl+e 跳到命令行尾
+    ctrl+u 删除光标至命令行首的内容
+    ctrl+k 删除光标至命令行尾的内容
+    ctrl+l 清屏 clear
 
   alias 命令别名
     alias CMDALIAS='command [options] [arguments]'
@@ -26,20 +26,16 @@ $? 命令执行结果
   命令替换
    `` == $()
 
-
-
-
-
 Base
   文件或目录处理 --> file_dir
-        ls,cd,pwd,mkdir,命令行展开,rm,touch,cp,mv
+        ls,cd,pwd,mkdir,命令行展开,tree,rmdir,rm,touch,cp,mv
         文件时间戳,find,tar,ln,du,df   
   
    磁盘，文件系统相关  -->raid_lvm______
-           我的弱点
+           我的弱点,MBR,设备文件标识,/dev,mknod创建设备文件,分区fdisk,创建文件系统,挂载卸载
 
   用户，组，权限 -->user
-        useradd,userdel,id,usermod,finger,passwd,groupadd,groupdel,groupmod,chage,chgrp,umask,bash配置文件，chown,chmod,特殊权限，setfacl，终端用户登录查看记录等
+       rwx, which,UID,GID,/etc/passwd,/etc/shadow,/etc/group,useradd,userdel,usermod,passwd,chsh,chfn,id,usermod,finger,passwd,groupadd,groupdel,groupmod,chage,chgrp,umask,bash配置文件，chown,chmod,特殊权限SUID,SGID,Sticky，setfacl，终端用户登录查看记录,basename $0,生成随机数等
   
    *日期时间处理 --> date*，文字颜色相关 --> colour_font，man  --> man，管道和重定向 --> pipe
 
@@ -49,4 +45,7 @@ Base
    文本处理  --> text
         cat,join,more,less,head,tail,cut,sort,uniq,wc,tr
         grep,sed,awk____,printf格式输出，正则表达式
-   
+  进程查看
+        ps,pstree,pgrep,top,vmstat,free,kill,pkill,bg,fg 
+  mysql
+       

@@ -14,7 +14,8 @@ w 可以在此目录创建文件
 x 可以使用cd切换进目录，也可以使用ls -l 查看内部文件详细信息
 目录一般有x，文件不能随意有x
 
-r w x - 4 2 1 0
+r w x - 
+4 2 1 0
 
 用户UID 用户组GID
 /etc/passwd
@@ -186,7 +187,7 @@ SGID 运行某程序时，相应进程的属组是程序文件自身的属组，
      应用场景 develop team hadoop.hbase,hive
            /tmp/project/
 Sticky 在一个公共目录，每个人都可以创建删除自己的文件，但不能删除别人的文件
-   如果file本身原来就有执行权限，则显示为t负责显示为T
+   如果file本身原来就有执行权限，则显示为t否则显示为T
      chmod o+t DIRNAME
      chmod o-t DIRNAME
      
@@ -237,5 +238,3 @@ pty 物理终端
 tty# 虚拟终端
 ttys# 串行终端
 pts/# 伪终端
-
-
