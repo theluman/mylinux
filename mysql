@@ -1,9 +1,3 @@
-数据库管理系统
-数据库的组织结构
-  层次型
-  网状型
-  关系型
-    表
 RDBMS功能：
 数据库创建、删除
 创建表、删除表、修改表
@@ -20,26 +14,6 @@ DCL:数据控制语言
   grant、revoke
 
 select
-
-RDBMS:
-  Oracle,sybase,infomix,sql server
-  mysql,postgresql,pgsql,enterpriseDB
-  
-  mysql
-     去IOE: IBM Oracle EMC
-
-反关系型技术：NoSQL
-  MongoDB
-  Redis
-  HBase
-
-DBMS特性
-  数据管理独立性
-  有效完成数据存储
-  数据完整性和安全性
-  数据集中管理
-  并发存储与故障恢复
-  减少应用程序开发时间
 
 基本功能：
 mysql包格式

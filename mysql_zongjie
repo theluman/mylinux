@@ -1,0 +1,98 @@
+安装 
+    rpm包 yum安装
+    通用二进制格式，不用安装，解压能用
+    源代码，编译安装
+默认数据目录是/var/lib/mysql,一个数据库其实就是/var/lib/mysql下的一个文件夹
+mysql安装目录结构
+    bin
+    data
+    include
+    lib
+    man
+    docs
+    mysql-test
+    scripts----------mysql初始化脚本
+    share------------每一种错误信息的不同语言脚本
+    sql-bench--------基准性能测试包
+    support-files----启动脚本 朱配置文件样例等等
+中心配置文件 /etc/my.cnf
+
+mysql 数据文件夹目录结构：
+ibdata1,2,3,4......------------innodb系统表空间文件，存储innodb系统信息和用户数据库表和索引
+ib_logfile0,1,2,3......-------日志文件
+mysql-bin.00001,......--------数据库存储二进制文件
+
+myisam引擎每个表都有3个文件
+    .frm-----表结构定义文件
+    .MYD-----表存储的数据文件
+    .MYI-----表索引文件
+innodb引擎
+    .frm-----表结构定义文件
+    .ibd-----表空间，表数据和索引
+    .opt-----存储默认字符集和排序规则
+    innodb 支持所有表共享一个表空间文件，但是不太好
+    建议定义每个表一个单独的表空间，默认不打开
+       打开方法
+        show variables like '%innodb'; 找到innodb可选项，innodb_file_per_table 复制，加入/etc/my.cnf 的mysqld段 innodb_file_per_table = on|1
+
+
+mysql初始化产生6个用户，4个本地用户，::1是ipv6地址的及2个匿名用户（匿名用户不安全，应该删掉）
+查看mysql用户：
+mysql修改用户密码3种方式：
+1、mysqladmin -u username -h hostname password 'newpassword' -p
+2、mysql > set password for 'username'@'host'=password('newpassword')
+3、mysql > update mysql.user set password=password('newpassword') where user='root'
+        mysql > update mysql.user set password=password('newpassword') where User='root' and Host='127.0.0.1'
+如果忘记mysql密码
+1、停掉mysql密码
+2、.my.cnf中[mysqld]字段 加入 skip-grant-tables
+3、启动mysqld
+4、 mysql连接，重设密码，测试登录
+5、删掉skip-grant-tables,重启服务
+
+mysql客户端
+mysql的用户格式是 username@host
+建立~/.my.cnf，可用于本地方便访问mysql,不用重复输入密码
+[client]
+user= 'root'
+password = 'mysql'
+host = 'localhost'
+
+mysql客户端
+交互式
+批处理模式（脚本模式）
+    命令行模式 mysql -uroot -p '' < init.sql(.sql里面就是通常写的sql语句)
+
+DML: 数据库操作语言
+    insert update delete select
+DDL：数据定义语言
+    creat alter drop
+DCL：数据控制语言
+    grant、revoke
+
+库：
+show databases;  --------------显示有哪血库
+create database DB_name;  -----创建库
+drop database DB_name; --------删除库
+alter database ......; --------修改库
+use DB_name;     --------------进入库，设定没人库
+
+表
+show tables; -----------------显示有哪些表
+    show tables from DB_name; 显示某个数据库有哪些表
+create table TB_name(字段名 字段类型 [修饰],字段名 字段类型 [修饰],......);------创建表
+    create table DB_name.TB_name......;
+drop table TB_name;  ------删除表
+    drop table DB_name.TB_name;
+desc TB_name; -----------------查看表结构
+alter table TB_name add|change|modify|drop .....; ----------修改表字段
+    alter table TB_name add 字段名 字段属性 [修饰] [first|after 字段名];
+    alter table TB_name change 旧字段名 新字段名 字段属性 [修饰] [first|after 字段名];
+    alter table TB_name modify  字段名 新字段属性 [修饰] [first|after 字段名];
+
+表数据
+insert delete update select
+insert into TB_name (col1,col2,...) value|values ('string',num,...);----插入数据
+    insert into TB_name (col1,col2,...) value|values ('string',num,...),('string',num,......);----批量插入数据
+delete from TB_name where [where_condition]; -------删除数据
+
