@@ -62,6 +62,49 @@ mysql客户端
 交互式
 批处理模式（脚本模式）
     命令行模式 mysql -uroot -p '' < init.sql(.sql里面就是通常写的sql语句)
+    客户端命令
+        \c  提前终止语句执行
+        \r  重新连接至mysql服务器
+        \d  指定结束符
+        \g  无论语句结果是什么，直接将语句送至服务端执行
+        \G  无论语句结束符是什么，直接将语句送至服务端执行，并且将结果以竖排显示
+        \q 退出
+        \p  显示你当前执行的命令
+        \. *.sql 加载*.sql语句批处理文件
+        \s 获取服务器信息
+        \! shell-command 不退出mysql执行shell命令
+        use或\u 使用哪个mysql作为默认操作数据库
+        \W 语句执行结束后显示警告信息
+        \w 不显示警告信息
+        \R修改mysql > 的提示符
+
+mysqladmin [options] command [arg] [command [arg]]...
+           create DATABASE不连接创建数据库
+           drop DATABSE
+           ping       ping mysqld是否在线
+              mysqladmin ping
+              mysqladmin -uroot -h ... -p ping
+            processlist 正在执行的线程列表
+           status       mysql状态
+              status --sleep 2 --count 2  没两秒钟显示一次，一共显示2个
+            extended-status 显示状态变量，监控mysql重要手段
+            variables: 显示服务器变量
+            flush-privileges 让mysql重读授权表，权限表
+            flush-status 重置绝多大数的服务器状态变量，重新计数
+            flush-tables
+            flush-threads 重置线程池
+            flush-logs  作日志滚动，主要是实现二进制和中继日志滚动
+            flush-hosts
+            kill 杀死一个mysql内部线程
+            reload = flush privileges
+            refresh = 同时执行flush-hosts和flush-logs
+            shutdown 停止mysql服务器
+            version 版本号，相关状态信息
+            start-slave 启动从服务器的复制线程
+               sql thread
+               io thread
+            stop-slave  关闭
+
 
 DML: 数据库操作语言
     insert update delete select
@@ -80,11 +123,20 @@ use DB_name;     --------------进入库，设定没人库
 表
 show tables; -----------------显示有哪些表
     show tables from DB_name; 显示某个数据库有哪些表
-create table TB_name(字段名 字段类型 [修饰],字段名 字段类型 [修饰],......);------创建表
-    create table DB_name.TB_name......;
+创建表三种方式
+    1.直接定义一张空表
+    2.从其他表中查询出数据，并以之创建新表
+    3.以其他表为模板，创建一个空表
+        1.create table TB_name(字段名 字段类型 [修饰],字段名 字段类型 [修饰],......);------创建表
+            create table DB_name.TB_name......;
+        2.create table NEWTB_name select * from OLDTB_name where where_condition; 此方法很多字段的属性的定义将不存在
+        3.create table NEWTB_name like OLDTB_name;  表结构定义是完全一样的
+
 drop table TB_name;  ------删除表
     drop table DB_name.TB_name;
 desc TB_name; -----------------查看表结构
+show table status like 'TB_name'\G; 显示表属性详细信息
+
 alter table TB_name add|change|modify|drop .....; ----------修改表字段
     alter table TB_name add 字段名 字段属性 [修饰] [first|after 字段名];
     alter table TB_name change 旧字段名 新字段名 字段属性 [修饰] [first|after 字段名];
@@ -95,4 +147,160 @@ insert delete update select
 insert into TB_name (col1,col2,...) value|values ('string',num,...);----插入数据
     insert into TB_name (col1,col2,...) value|values ('string',num,...),('string',num,......);----批量插入数据
 delete from TB_name where [where_condition]; -------删除数据
+update TB_name set column1=value1,column2=value2,......[where where_condition;] -------修改数据
+select column from TB_name [where where_condition];
+    select * from TB_name *     表示所有字段   
+    where 不写表示所有行
+select user();  查看当前是哪个用户登录的：
 
+创建用户
+create user 'username'@'host' identified by 'password';
+drop user 'username'@'host';
+    host
+        ip
+        hostname
+        network
+        通配符
+            _:匹配任意单个字符 172.16.0.——
+            %:匹配任意长度的任意字符
+
+权限
+grant 权限1,权限2,...... on DB_name.TB_name to 'username'@'host' [identified by 'password'];
+revoke 权限1,权限2,...... on DB_name.TB_name from 'username'@'host';
+show grants for 'username'@'host';
+
+数据类型
+字段名称,数据类型,类型修饰（限制）
+
+字符
+    char(n) 固定长度的字符
+    varchar(n) 可变长度的字符
+    binary(n) 区分大小写的固定长度的字符
+    varbinary(n) 区分大小写的可变长度的字符
+    text(n) 大文本对象
+    blob(n) 二进制大对象（图片，声音等等）
+数值
+    整形
+        tinyint 单字节
+        smallint 2个字节
+        mediumint 3个字节
+        int       4个字节
+        bigint    8个字节
+修饰符  unsigned 无符号,正负号
+        not null 不为空
+        null     为空
+        zerofill 0填充空位
+        auto_increment 自增
+        primary [key]() 主键
+        unique [key]() 唯一键
+        index()  索引
+create table tb1(id int unsigned not null auto_increment primary key,name char(20),age tinyint not null)
+create table tb1(id int unsigned not null auto_increment,name char(20),age tinyint not null,primary key(id,name),unique key(name),index(age))
+
+键也称作约束，可用作索引，是特殊的索引（有特殊要求）
+create index 单独创建索引
+help create table
+
+
+        
+    浮点型
+        float
+        double
+日期时间
+    date
+    time
+    datetime
+    stamp
+布尔
+    true
+    false
+内置
+    enum
+    set
+
+例如，建立一个名为MyClass的表：
+字段名  数字类型    数据宽度    是否为空    是否主键        自动增加           默认值
+id        int           4          否       primary key    auto_increment   
+name       char         20         否           
+sex         int          4         否                                             0
+degree      double       16        是     
+      
+mysql> create table MyClass(
+    > id int(4) not null primary key auto_increment,
+    > name char(20) not null,
+    > sex int(4) not null default '0',
+    > degree double(16,2));
+
+show engines; 显示存储引擎
+select database(); 显示默认库
+select user();  显示当前用户
+show table status [like 'user']; 查看表的属性信息
+show table status like 'user'\G; 查看表的属性信息，竖排显示
+
+
+show variables like 'log_%';   ----是否启用了日志
+show variables like 'general_log_file';  日志文件路径
+
+
+auto_increment 自动增长，默认从1开始，步长为1，如果一个字段定义了此类型，一定不能为空，其次一定要创建创>    建索引，要么是主键索引，要么是唯一键索引
+ select last_insert_id(); 查看最后一个id
+   使用auto_increment条件
+     必须是整型
+     只能包含正数，不能使负数，所以声明成 unsigend就行 无符号的整形
+     必须有索引主键或唯一键
+     not null
+       create table test(id int unsigend auto_increment not null primary key,name char(20),...)
+ 
+ float
+ 
+ 数值型可以使用的修饰符 not null,null,default,auto_increment,unsigend,zerofill(多余位用0填充)
+ 
+ bool <==> tinyint(1)
+   1
+   0
+ 
+ date
+   date '1000-01-01' to '9999-12-31' 占据3个字节
+   time '-838:59:59'to'838:59:58'  3 bytes
+   datetime '1000-01-01 00:00:00'to '9999-12-31 23:59:59' 8 bytes
+   timestamp '1970-01-01 00:00:00'to'2038-01-18 22:14:07' 4 bytes
+     year(2) 00 to 99         1 byte
+   year(4) 1901 to 2155     1 byte
+  默认值对应是0
+ 修饰 not null,null,default
+ 
+ enum枚举,set集合
+   enum 最多可以表示65535种变化，即供用户选择的选项
+     使用 定义字段 RRtype enum('A','MX','NS') ,week eunm('MONDAY','TUESDAY','WEDNESDAY',...)
+   set:集合，可以随意排列组合，存储的方式不是存的字符，而是存的数据的索引，位图，无法索引排序
+ 
+ sql模型
+   ansi quotes
+ 
+ mysql服务器变量：
+   作用域，分为两类
+     全局变量，全局起作用，永久
+       show global variables like '...'
+     会话变量，只对当前的mysql链接起作用
+       show [session] variables like '...'
+ 
+   生效时间划分，分为两类：
+     可动态调整
+        可以即时调整，即时生效
+     静态的
+         写在配置文件中
+        通过参数传递给mysqld
+   动态调整参数的生效方式：
+      全局：对当前会话无效，只对新建立的会话有效
+      会话：即时生效，但只对当前会话有效，会话关闭后有无效
+   服务器变量：@@变量名
+      显示：select
+      设定 set
+     select @@global.sql.mode
+     set global|session 变量名='值'
+ sql语句
+
+show variables like 'log_error';    错误日志路径
+show variables like 'slow_query_log_file';  慢查询日志文件路径
+
+show indexes from TB_name;  显示表的索引
