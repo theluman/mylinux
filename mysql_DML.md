@@ -1,5 +1,7 @@
 数据库操作语言DML,insert into,delete,update,select
 ===
+用到的数据库及表格
+
 * insert into
 * delete
 * update
@@ -22,3 +24,5 @@
             * 过滤
         * 字段别名
         * 聚合运算
+* 多表查询
+* 子查询
