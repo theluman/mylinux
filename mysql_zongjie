@@ -304,3 +304,45 @@ show variables like 'log_error';    错误日志路径
 show variables like 'slow_query_log_file';  慢查询日志文件路径
 
 show indexes from TB_name;  显示表的索引
+create index INdex_name on TB_name (col_name1,col_name2,...); ------help create index
+drop index INdex_name on TB_name;
+索引只能创建和删除不能修改
+
+mysql查询，单表，多表，子查询
+查询语句类型：
+    单表查询（简单查询）
+    多表查询
+    子查询（嵌套查询）
+select * from TB_name;
+select COL_name1,COL_name2 from TB_Name;
+select COL_name as ALIas_name from TB_name; 字段起别名
+select * from TB_name where Where_condition;
+select [distinct] * from TB_name where Where_condition; distinct 相同的值只显示一次
+from子句，要查询的关系：表（单表查询），多个表（多表查询），其他select语句（子查询）
+where子句：布尔关系表达式： =  >  <  >=  <=  !=  <=>
+            逻辑关系 and  or  not   between ... and ...   like
+                like ''
+                    %: 任意长度的任意字符
+                    _: 任意单个字符
+                rlike ‘’支持正则表达式,索引就不能用了
+                    '^[mny].*$'
+                in (value1,value2,...)
+                is 'null',is not 'null'
+            运算 +  -  *  、 ..
+orded by 子句： orded by COL_name {asc|desc}
+字段别名 as
+limit子句： limit [offset,]count   偏移
+聚合计算：select avg(COL_name) from TB_name;
+            select max(COL_name) from TB_name;
+            select min(COL_name) from TB_name;
+            sum(),min(),max(),avg(),count()
+group by子句  分组
+    过滤 having HAVing_condition
+
+多表查询：
+    链接
+        交叉链接（笛卡尔乘积）
+        自然链接 两张表中有对应等值关系的字段的内容就显示
+        外链接   两张表中不一定有严格的对应关系
+            左外链接  LEFT_TB_NAME left join RIGIT_TB_name on ...;
+            右外链接
