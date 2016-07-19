@@ -4,7 +4,7 @@
 ===
 
 * insert into<br>
-        insert into TB_name (COL_Name1,COL_name2,...) values (value1,value2,...);
+    &nbsp;&nbsp;&nbsp;&nbsp;insert into TB_name (COL_Name1,COL_name2,...) values (value1,value2,...);
 * delete
 * update
 * select
