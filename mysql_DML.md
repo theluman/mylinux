@@ -1,8 +1,10 @@
 数据库操作语言DML,insert into,delete,update,select
 ===
 用到的数据库及表格
+===
 
 * insert into
+    insert into TB_name (COL_Name1,COL_name2,...) values (value1,value2,...);
 * delete
 * update
 * select
@@ -18,11 +20,13 @@
             * in
             * is ‘null‘,is not ’null‘
             * 算数运算
-        * order by子句
-        * limit子句
-        * group by 子句
+        * order by排序
+        * limit
+        * group by分组
             * 过滤
         * 字段别名
         * 聚合运算
 * 多表查询
 * 子查询
+
+
