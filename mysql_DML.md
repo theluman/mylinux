@@ -3,8 +3,8 @@
 用到的数据库及表格
 ===
 
-* insert into,<br>
-    insert into TB_name (COL_Name1,COL_name2,...) values (value1,value2,...);
+* insert into<br>
+        insert into TB_name (COL_Name1,COL_name2,...) values (value1,value2,...);
 * delete
 * update
 * select
